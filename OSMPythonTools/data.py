@@ -38,7 +38,7 @@ class Data:
             data = list(map(lambda params: fetch(*params), itertools.product(*[[v for v in dimension.values()] for dimension in dimensions.values()])))
             for dim, v in reversed(dimensions.items()):
                 data = [data[i:i+len(v)] for i in range(0, len(data), len(v))]
-            self._dataset = xr.DataArray(data=data[0], dims=list(dimensions.keys()), coords=[list(v.keys()) for v in dimensions.values()]).to_dataset(name='TODO')
+            self._dataset = xr.DataArray(data=data[0], dims=list(dimensions.keys()), coords=[list(v.keys()) for v in dimensions.values()]).to_dataset(name='value')
         elif isinstance(arg1, Data) and isinstance(arg2, xr.Dataset):
             self._dimensions = arg1._dimensions
             self._dataset = arg2
@@ -154,7 +154,7 @@ class Data:
     def show(self):
         print(self)
     
-    def csv(self):
+    def getCSV(self):
         return self.getDataFrame().to_csv()
     
     def excelClipboard(self):

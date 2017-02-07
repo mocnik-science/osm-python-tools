@@ -17,9 +17,9 @@ pip install OSMPythonTools
 
 The following modules are available (please click on their names to access further documentation):
 
-* OSMPythonTools.**DATA** - Collecting, mining, and drawing data from OSM; to be used in combination with the other modules
-* OSMPythonTools.**Nominatim** - Access to Nominatim, a reverse geocoder
-* OSMPythonTools.**Overpass** - Access to the Overpass API
+* [OSMPythonTools.**DATA**](docs/data.md) - Collecting, mining, and drawing data from OSM; to be used in combination with the other modules
+* [OSMPythonTools.**Nominatim**](docs/nominatim.md) - Access to Nominatim, a reverse geocoder
+* [OSMPythonTools.**Overpass**](docs/overpass.md) - Access to the Overpass API
 
 ## Author
 

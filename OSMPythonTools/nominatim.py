@@ -12,7 +12,7 @@ class Nominatim(CacheObject):
     def _queryRequest(self, endpoint, queryString):
         return endpoint + '?format=json&q=' + urllib.parse.quote_plus(queryString, safe='')
     
-    def _jsonToResult(self, data, queryString):
+    def _rawToResult(self, data, queryString):
         return NominatimResult(data, queryString)
 
 class NominatimResult:

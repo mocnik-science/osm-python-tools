@@ -1,6 +1,8 @@
-[back](../../../)
+[back to readme](../../../)
 
 # Overpass API
+
+## Performing queries
 
 OSM data can be accessed using the [http://wiki.openstreetmap.org/wiki/Overpass_API](Overpass API). While the Overpass API is powerful, it cannot automatically reverse geocode place names. We thus use Nominatim again to query the area id of, for example, NYC:
 ```python
@@ -33,11 +35,15 @@ Also a timeout can be set:
 overpass.query(query, timeout=25)
 ```
 
+## Accessing the result of a query
+
 The result of the overpass query is an object containing several functions to easily access the data. All elements returned by the query can be accessed:
 ```python
 busStops.elements()
-# [{'type': 'node', 'id': 42467507, 'lat': 40.701424, 'lon': -73.943064, 'tags': ...
+# [<OSMPythonTools.element.Element object at 0x10963c9b0>, <OSMPythonTools.element.Element object at 0x10963c8d0>, ...
 ```
+Each element is of the type [OSMPythonTools.element.**Element**](element.md), and easy methods to access its properties exist.
+
 Also only elements of a certain type can be accessed:
 ```python
 busStops.nodes()
@@ -61,17 +67,6 @@ busStops.countAreas()
 # 0
 ```
 Overpass queries contain information about the verbosity of the result. If the verbosity is `body`, like in our example, all important information about the bus stops is returned. If `count` is used instead, only the number of elements is returned. The function `busStops.elements()` will return a list of elements in the first case, and `None` in the second case. The function `busStops.countElements()` will return the number of elements in both cases.
-
-Data about a bus stop can easily be accessed as a python dictionary. The first bus stop in the list can be accessed by `busStops.elements()[0]`:
-```python
-{'type': 'node', 'id': 42467507, 'lat': 40.701424, 'lon': -73.943064, 'tags': {'asset_ref': '2030', 'highway': 'bus_stop', 'location': 'Broadway / Thornton Street', 'name': 'Broadway / Thornton Street', 'route_ref': 'B46;B46-LTD'}}
-```
-Accordingly, the latitude and longitude, and the tags can, for example, be accessed by:
-```python
-busStops.elements()[0]['lat']
-busStops.elements()[0]['lon']
-busStops.elements()[0]['tags']
-```
 
 Not only the data itself but also meta data about the query can be accessed. We can, for example, test whether the query was valid:
 ```python

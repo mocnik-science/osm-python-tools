@@ -5,12 +5,13 @@ import time
 import urllib.request
 
 class CacheObject:
-    def __init__(self, prefix, endpoint, cacheDir='cache', waitBetweenQueries=None):
+    def __init__(self, prefix, endpoint, cacheDir='cache', waitBetweenQueries=None, jsonResult=True):
         self._prefix = prefix
         self._endpoint = endpoint
         self.__cacheDir = cacheDir
         self.__waitBetweenQueries = waitBetweenQueries
         self.__lastQuery = None
+        self.__jsonResult = jsonResult
     
     def query(self, *args, onlyCached=False, **kwargs):
         queryString, hashString = self._queryString(*args, **kwargs)
@@ -32,7 +33,7 @@ class CacheObject:
             data = self.__query(queryString)
             with open(filename, 'w') as file:
                 ujson.dump(data, file)
-        result = self._jsonToResult(data, queryString)
+        result = self._rawToResult(data, queryString)
         if not self._isValid(result):
             raise(Exception('[' + self._prefix + '] error in result (' + filename + '): ' + queryString))
         return result
@@ -45,13 +46,13 @@ class CacheObject:
             os.remove(filename)
     
     def _queryString(self, *args, **kwargs):
-        raise(NotImplementedError('Subclass should implement __queryString'))
+        raise(NotImplementedError('Subclass should implement _queryString'))
     
     def _queryRequest(self, endpoint, queryString):
-        raise(NotImplementedError('Subclass should implement __queryRequest'))
+        raise(NotImplementedError('Subclass should implement _queryRequest'))
     
-    def _jsonToResult(self, data):
-        raise(NotImplementedError('Subclass should implement __jsonToResult'))
+    def _rawToResult(self, data):
+        raise(NotImplementedError('Subclass should implement _rawToResult'))
     
     def _isValid(self, result):
         return True
@@ -65,6 +66,10 @@ class CacheObject:
         return h.hexdigest()
     
     def __query(self, requestString):
-        response = urllib.request.urlopen(self._queryRequest(self._endpoint, requestString))
+        try:
+            response = urllib.request.urlopen(self._queryRequest(self._endpoint, requestString))
+        except:
+            return None
         encoding = response.info().get_content_charset('utf-8')
-        return ujson.loads(response.read().decode(encoding))
+        r = response.read().decode(encoding)
+        return ujson.loads(r) if self.__jsonResult else r

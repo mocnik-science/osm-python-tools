@@ -3,6 +3,7 @@ import time
 import urllib.parse
 import urllib.request
 
+from OSMPythonTools.element import Element
 from OSMPythonTools.internal.cacheObject import CacheObject
 
 def _raiseException(prefix, msg):
@@ -39,11 +40,11 @@ class Overpass(CacheObject):
     def _queryRequest(self, endpoint, queryString):
         return urllib.request.Request(endpoint + 'interpreter', urllib.parse.urlencode({'data': queryString}).encode('utf-8'))
     
-    def _jsonToResult(self, data, queryString):
+    def _rawToResult(self, data, queryString):
         return OverpassResult(data, queryString)
     
     def _isValid(self, result):
-        return result.isValid();
+        return result.isValid()
     
     def _waitForReady(self):
         try:
@@ -69,6 +70,7 @@ class Overpass(CacheObject):
 class OverpassResult:
     def __init__(self, json, queryString):
         self._json = json
+        self._elements = list(map(lambda e: Element(json=e), self.__get('elements')))
         self._queryString = queryString
     
     def isValid(self):
@@ -107,10 +109,10 @@ class OverpassResult:
         if len(es) == 1 and 'count' in es[0]:
             return None
         else:
-            return es
+            return self._elements
     def __elementsOfType(self, elementType):
         elements = self.elements()
-        return list(filter(lambda element: element['type'] == elementType, elements)) if elements else None
+        return list(filter(lambda element: element.type() == elementType, elements)) if elements else None
     def nodes(self):
         return self.__elementsOfType('node')
     def ways(self):

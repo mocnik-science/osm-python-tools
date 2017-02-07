@@ -1,6 +1,8 @@
-[back](../../../)
+[back to readme](../../../)
 
 # Nominatim
+
+## Reverse geocoding
 
 OSM data contains numerous place names. Nominatim is a reverse geocoder which is able to identify geometries in OSM data corresponding to a given string. If you are, for example, interested in the German town Heidelberg, you can query:
 ```python
@@ -18,6 +20,8 @@ This raw data provided by Nominatim potentially contains more than one geometry.
 heidelberg.toJSON()
 # [{'place_id': '580259', 'licence': 'Data © OpenStreetMap ...
 ```
+
+## Parameters
 
 As a default, `OSMPythonTools.Nominatim` uses the endpoint `https://nominatim.openstreetmap.org/search`. If another one should be used, for example, a local one, corresponding data can be provided:
 ```python

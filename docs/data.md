@@ -1,8 +1,10 @@
-[back](../../../)
+[back to readme](../../../)
 
 # Data Tools
 
 The module contains tools for easily collecting, mining, and drawing data from OSM. It is meant to be used in combination with the other modules.
+
+## Querying data
 
 Imagine the following example: we try to understand how the number of roads has developed over time in different towns. We are not only interested in the number of roads in general, but also to different kind of roads. We first fomulate different "dimensions", for example, the temporal dimension, the dimension of different towns, and the dimension of different roads (this example is [part of the repository](https://github.com/mocnik-science/osm-python-tools/blob/master/examples/example.py)):
 ```python
@@ -58,7 +60,11 @@ vienna     primary    2013.0    998
                       2014.0   1284
                       ...
 ```
-As it has a representation as a string, it can even be printed in the interactive python interpreter in a human readable way. The data can also be restricted to one value for some dimension, for example, to the town Vienna:
+As it has a representation as a string, it can even be printed in the interactive python interpreter in a human readable way.
+
+## Filtering the result of a query
+
+The queried data can be restricted to one value for some dimension, for example, to the town Vienna:
 ```python
 data.select(town='vienna')
 ```
@@ -115,7 +121,10 @@ year
 2016.0     1619       1892
 2017.0     1719       2022
 ```
-The data can be analyzed (number of values, mean value, standard derivation, etc.):
+
+## Analyzing the result of the query
+
+The queried data can be analyzed (number of values, mean value, standard derivation, etc.) as follows:
 ```python
 data.describe(typeOfRoad=ALL, town='vienna')
 ```
@@ -131,6 +140,8 @@ min     998.000000  1381.000000  1235.000000
 75%    1619.000000  1892.000000  1706.000000
 max    1719.000000  2022.000000  1802.000000
 ```
+
+## Visualizing the result of the query
 
 Instead of computing table representations, the data can also be plotted by using the same syntax to restrict the data:
 ```python
@@ -161,7 +172,9 @@ When the plots (`plot`, `plotBar`, and `plotScatter`) are generated, they are (o
 data.plot(town='manhattan', typeOfRoad=ALL, filename='manhattan.pdf')
 ```
 
-The data is encapsulated inside an object. It can, however, be accessed in different formats:
+## Exporting the result of the query
+
+The queried data is encapsulated inside an object. It can, however, be accessed in different formats:
 ```python
 data.getDataFrame()    # as a pandas DataFrame
 data.getDataset()      # as a xarray Dataset
@@ -171,7 +184,9 @@ data.excelClipboard()  # Excel format, copied to clipboard
 ```
 Information about the packages [xarray](http://xarray.pydata.org) and [pandas](http://pandas.pydata.org) can be found on their websites.
 
-The following commands are not documented:
+## Undocumented methods
+
+The following methods are not documented:
 * `drop`: drop a row
 * `apply`: apply a function to the data
 * `toColumn`: apply `select` and produce a column from the resulting data

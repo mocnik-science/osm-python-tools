@@ -48,10 +48,6 @@ class Element:
     def __nodes(self):
         return self.__getElement('nodes') if self._json is not None else self._soup.find_all('nd')
     def nodes(self):
-        # if self._json is not None:
-        #     members = self._json['members'] if prop in self._json else []
-        # else:
-        #     members = self._soup.find_all('member')
         nodes = self.__nodes()
         if nodes is None or len(nodes) == 0:
             return []
@@ -65,17 +61,12 @@ class Element:
     def __members(self):
         return self.__getElement('members') if self._json is not None else self._soup.find_all('member')
     def members(self):
-#        if self._json is not None:
-#            members = self._json['members'] if prop in self._json else []
-#        else:
-#            members = self._soup.find_all('member')
         members = self.__members()
         if members is None or len(members) == 0:
             return []
         api = SingletonApi()
         return list(map(lambda m: api.query(m['type'] + '/' + str(m['ref'])), members))
     def countMembers(self):
-#        members = self.__getElement('members') if self._json is not None else self._soup.find_all('member')
         members = self.__members()
         return len(members) if members is not None else None
     

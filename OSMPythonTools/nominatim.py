@@ -23,10 +23,10 @@ class NominatimResult:
     def toJSON(self):
         return self._json
     
-    def getQueryString(self):
+    def queryString(self):
         return self._queryString
     
-    def getAreaId(self):
+    def areaId(self):
         for d in self._json:
             if 'osm_type' in d and d['osm_type'] == 'relation' and 'osm_id' in d:
                 return 3600000000 + int(d['osm_id'])

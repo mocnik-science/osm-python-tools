@@ -80,7 +80,7 @@ class OverpassResult:
     def toJSON(self):
         return self._json
     
-    def getQueryString(self):
+    def queryString(self):
         return self._queryString
     
     def __get(self, prop):

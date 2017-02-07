@@ -12,7 +12,7 @@ setup(
     'ujson',
     'xarray',
   ],
-  version = '0.1.1',
+  version = '0.1.2',
   author = 'Franz-Benjamin Mocnik',
   author_email = 'mail@mocnik-science.net',
   description = 'A library to access OpenStreetMap related services',

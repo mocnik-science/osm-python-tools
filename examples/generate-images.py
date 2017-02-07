@@ -28,7 +28,7 @@ nominatim = Nominatim()
 overpass = Overpass()
 
 def fetch(year, city, typeOfRoad):
-    areaId = nominatim.query(city).getAreaId()
+    areaId = nominatim.query(city).areaId()
     query = overpassQueryBuilder(area=areaId, elementType='way', selector='"highway"="' + typeOfRoad + '"', out='count')
     return overpass.query(query, date=year, timeout=60).countElements()
 

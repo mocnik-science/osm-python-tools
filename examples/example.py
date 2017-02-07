@@ -27,7 +27,7 @@ print('=' * 6, 'Example 3', '=' * 6)
 
 from OSMPythonTools.nominatim import Nominatim
 nominatim = Nominatim()
-areaId = nominatim.query('Vienna').getAreaId()
+areaId = nominatim.query('Vienna').areaId()
 
 from OSMPythonTools.overpass import overpassQueryBuilder
 query = overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="tree"', out='count')
@@ -51,7 +51,7 @@ dimensions = OrderedDict([
 ])
 
 def fetch(year, city):
-    areaId = nominatim.query(city).getAreaId()
+    areaId = nominatim.query(city).areaId()
     query = overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="tree"', out='count')
     return overpass.query(query, date=year, timeout=60).countElements()
 

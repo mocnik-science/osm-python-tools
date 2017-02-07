@@ -13,7 +13,7 @@ nyc = nominatim.query('NYC')
 Overpass queries are simple enough to be written by hand, but we will demonstrate how to use the `overpassQueryBuilder`:
 ```python
 from OSMPythonTools.overpass import overpassQueryBuilder
-query = overpassQueryBuilder(area=nyc.getAreaId(), elementType='node', selector='"highway"="bus_stop"', out='body')
+query = overpassQueryBuilder(area=nyc.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body')
 ```
 The variable `query` is just a string containing the query:
 ```

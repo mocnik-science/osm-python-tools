@@ -45,7 +45,7 @@ class ApiResult(Element):
     def toXML(self):
         return self._xml
     
-    def getQueryString(self):
+    def queryString(self):
         return self._queryString
     
     def __get(self, prop):

@@ -12,10 +12,10 @@ heidelberg = nominatim.query('Heidelberg')
 ```
 The result of this query is an object which contains a number of functions to access the data. Most important, the area id can be accessed:
 ```python
-heidelberg.getAreaId()
+heidelberg.areaId()
 # 3600285864
 ```
-This raw data provided by Nominatim potentially contains more than one geometry. The function `getAreaId` only returns the area id of the first geometry. The (complete) raw data of the answer by Nominatim can be accessed:
+This raw data provided by Nominatim potentially contains more than one geometry. The function `areaId` only returns the area id of the first geometry. The (complete) raw data of the answer by Nominatim can be accessed:
 ```python
 heidelberg.toJSON()
 # [{'place_id': '580259', 'licence': 'Data © OpenStreetMap ...

@@ -58,7 +58,7 @@ This time, we have to first resolve the name "Vienna" to an area id:
 ```python
 from OSMPythonTools.nominatim import Nominatim
 nominatim = Nominatim()
-areaId = nominatim.query('Vienna').getAreaId()
+areaId = nominatim.query('Vienna').areaId()
 ```
 This area id can now be used to build the corresponding query:
 ```python
@@ -98,7 +98,7 @@ dimensions = OrderedDict([
 We have to define how we fetch the data. We again use Nominatim and the Overpass API to query the data (it can take some time to perform this query the first time!):
 ```python
 def fetch(year, city):
-    areaId = nominatim.query(city).getAreaId()
+    areaId = nominatim.query(city).areaId()
     query = overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="tree"', out='count')
     return overpass.query(query, date=year, timeout=60).countElements()
 data = Data(fetch, dimensions)

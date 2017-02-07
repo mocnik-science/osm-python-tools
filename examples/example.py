@@ -1,42 +1,61 @@
-#!/usr/bin/env python3 -i
+#!/usr/bin/env python3
+
+print('=' * 6, 'Example 1', '=' * 6)
+
+from OSMPythonTools.api import Api
+
+api = Api()
+way = api.query('way/5887599')
+print('building:        %s' % way.tag('building'))
+print('historic         %s' % way.tag('historic'))
+print('architect:       %s' % way.tag('architect'))
+print('website:         %s' % way.tag('website'))
+
+print('=' * 6, 'Example 2', '=' * 6)
+
+from OSMPythonTools.overpass import Overpass
+
+overpass = Overpass()
+result = overpass.query('way["name"="Stephansdom"]; out body;')
+stephansdom = result.elements()[0]
+print('name:en:         %s' % stephansdom.tag('name:en'))
+print('address:         %s %s, %s %s' % (stephansdom.tag('addr:street'), stephansdom.tag('addr:housenumber'), stephansdom.tag('addr:postcode'), stephansdom.tag('addr:city')))
+print('building:        %s' %  stephansdom.tag('building'))
+print('denomination:    %s' % stephansdom.tag('denomination'))
+
+print('=' * 6, 'Example 3', '=' * 6)
 
 from OSMPythonTools.nominatim import Nominatim
-from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
-from OSMPythonTools.data import Data, dictRangeYears, ALL
+nominatim = Nominatim()
+areaId = nominatim.query('Vienna').getAreaId()
+
+from OSMPythonTools.overpass import overpassQueryBuilder
+query = overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="tree"', out='count')
+result = overpass.query(query)
+print('number of trees (now):  %s' % result.countElements())
+result = overpass.query(query, date='2013-01-01T00:00:00Z', timeout=60)
+print('number of trees (2013): %s' % result.countElements())
+
+print('=' * 6, 'Example 4', '=' * 6)
 
 from collections import OrderedDict
-
-# dimensions
+from OSMPythonTools.data import Data, dictRangeYears, ALL
 
 dimensions = OrderedDict([
-  ('year', dictRangeYears(2013, 2017.5, 1)),
-  ('town', OrderedDict({
-    'heidelberg': 'Heidelberg, Germany',
-    'manhattan': 'Manhattan, New York',
-    'vienna': 'Vienna, Austria',
-  })),
-  ('typeOfRoad', OrderedDict({
-    'primary': 'primary',
-    'secondary': 'secondary',
-    'tertiary': 'tertiary',
-  })),
+    ('year', dictRangeYears(2013, 2017.5, 1)),
+    ('city', OrderedDict({
+        'berlin': 'Berlin, Germany',
+        'paris': 'Paris, France',
+        'vienna': 'Vienna, Austria',
+    })),
 ])
 
-# data mining
-
-nominatim = Nominatim()
-overpass = Overpass()
-
-def fetch(year, town, typeOfRoad):
-    areaId = nominatim.query(town).getAreaId()
-    query = overpassQueryBuilder(area=areaId, elementType='way', selector='"highway"="' + typeOfRoad + '"', out='count')
+def fetch(year, city):
+    areaId = nominatim.query(city).getAreaId()
+    query = overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="tree"', out='count')
     return overpass.query(query, date=year, timeout=60).countElements()
 
 data = Data(fetch, dimensions)
 
-# assess the data
-
-data.plot(town='manhattan', typeOfRoad=ALL, filename='plot-manhattan.png')
-data.plot(town=ALL, typeOfRoad='primary', filename='plot-primary.png')
-data.plotBar(town='manhattan', year=ALL, filename='plotbar-manhattan.png')
-data.plotScatter('vienna', 'manhattan', town=['vienna', 'manhattan'], typeOfRoad='primary', filename='plotscatter-primary.png')
+print(data.select(city=ALL).getCSV())
+data.plot(city=ALL, filename='example4.png')

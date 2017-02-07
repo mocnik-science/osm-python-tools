@@ -1,5 +1,6 @@
 MANIFEST
 __pycache__
+/cache
 /dist
 /examples/cache
 

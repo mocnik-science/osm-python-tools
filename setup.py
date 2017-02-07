@@ -2,6 +2,16 @@ from distutils.core import setup
 setup(
   name = 'OSMPythonTools',
   packages = ['OSMPythonTools', 'OSMPythonTools.internal'],
+  install_requires = [
+    'beautifulsoup4',
+    'datetime',
+    'lxml',
+    'matplotlib',
+    'numpy',
+    'pandas',
+    'ujson',
+    'xarray',
+  ],
   version = '0.1',
   author = 'Franz-Benjamin Mocnik',
   author_email = 'mail@mocnik-science.net',

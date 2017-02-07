@@ -1,3 +1,5 @@
+[back](../)
+
 # Nominatim
 
 OSM data contains numerous place names. Nominatim is a reverse geocoder which is able to identify geometries in OSM data corresponding to a given string. If you are, for example, interested in the German town Heidelberg, you can query:

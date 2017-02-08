@@ -4,6 +4,8 @@ import os
 import time
 import urllib.request
 
+import OSMPythonTools
+
 class CacheObject:
     def __init__(self, prefix, endpoint, cacheDir='cache', waitBetweenQueries=None, jsonResult=True):
         self._prefix = prefix
@@ -60,14 +62,21 @@ class CacheObject:
     def _waitForReady(self):
         return None
     
+    def _userAgent(self):
+        return '%s/%s (%s)' % (OSMPythonTools.__name__, OSMPythonTools.__version__, OSMPythonTools.__url__)
+    
     def __hash(self, x):
         h = hashlib.sha1()
         h.update(x.encode('utf-8'))
         return h.hexdigest()
     
     def __query(self, requestString):
+        request = self._queryRequest(self._endpoint, requestString)
+        if not isinstance(request, urllib.request.Request):
+            request = urllib.request.Request(request)
+        request.headers['User-Agent'] = self._userAgent()
         try:
-            response = urllib.request.urlopen(self._queryRequest(self._endpoint, requestString))
+            response = urllib.request.urlopen(request)
         except:
             return None
         encoding = response.info().get_content_charset('utf-8')

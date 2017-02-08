@@ -50,7 +50,7 @@ class Overpass(CacheObject):
         try:
             haveWaited = False
             while True:
-                response = urllib.request.urlopen(self._endpoint + 'status')
+                response = urllib.request.urlopen(urllib.request.Request(self._endpoint + 'status', headers= {'User-Agent': self._userAgent()}))
                 encoding = response.info().get_content_charset('utf-8')
                 statusString = response.read().decode(encoding).split('\n')
                 if statusString[3].endswith('slots available now.'):

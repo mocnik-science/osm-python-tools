@@ -3,8 +3,7 @@ import sys
 class SingletonApi():
     __instance = None
     def __init__(self, *args, **kwargs):
-        if 'OSMPythonTools.api' not in sys.modules:
-            from OSMPythonTools.api import Api
+        from OSMPythonTools.api import Api
         if not SingletonApi.__instance:
             SingletonApi.__instance = Api(*args, **kwargs)
     def __getattr__(self, name):

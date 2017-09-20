@@ -47,7 +47,7 @@ class ApiResult(Element):
         return self._queryString
     
     def __get(self, prop):
-        return self._soup.osm[prop] if self._isValid and 'osm' in self._soup and prop in self._soup.osm.attrs else None
+        return self._soup.attrs[prop] if self._isValid and prop in self._soup.attrs else None
     
     ### general information
     def version(self):

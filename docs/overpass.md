@@ -10,6 +10,7 @@ from OSMPythonTools.nominatim import Nominatim
 nominatim = Nominatim()
 nyc = nominatim.query('NYC')
 ```
+
 Overpass queries are simple enough to be written by hand, but we will demonstrate how to use the `overpassQueryBuilder`:
 ```python
 from OSMPythonTools.overpass import overpassQueryBuilder
@@ -17,8 +18,18 @@ query = overpassQueryBuilder(area=nyc.areaId(), elementType='node', selector='"h
 ```
 The variable `query` is just a string containing the query:
 ```
-'area(3600175905)->.searchArea;node(area.searchArea);node._["highway"="bus_stop"]; out body;'
+'area(3600175905)->.searchArea;(node["highway"="bus_stop"](area.searchArea);); out body;'
 ```
+
+If not only one `elementType` or `selector` shall be queried for, also lists can be provided for both parameters:
+```python
+query = overpassQueryBuilder(area=nominatim.query('London').areaId(), elementType=['node', 'way'], selector=['"name"~"Tesco"', 'opening_hours'])
+```
+The resulting query accordingly lists all nodes and ways in the area of London, which have a key `name` with a value containing `Tesco` and a tag `opening_hours`:
+```
+'area(3600065606)->.searchArea;(node["name"~"Tesco"][opening_hours](area.searchArea);way["name"~"Tesco"][opening_hours](area.searchArea);); out body;'
+```
+
 We can now query an Overpass endpoint:
 ```python
 from OSMPythonTools.overpass import Overpass

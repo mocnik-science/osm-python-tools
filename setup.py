@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 name = 'OSMPythonTools'
-version = '0.1.6'
+version = '0.1.7'
 url = 'https://github.com/mocnik-science/osm-python-tools'
 
 with open('./OSMPythonTools/__info__.py', 'w') as f:

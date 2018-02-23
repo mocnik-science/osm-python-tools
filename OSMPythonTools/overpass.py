@@ -17,7 +17,15 @@ def overpassQueryBuilder(elementType=None, selector=None, area=None, out='body')
         _raiseException('overpassQueryBuilder', 'Please provide a selector')
     if not area:
         _raiseException('overpassQueryBuilder', 'Please provide an area')
-    return 'area(' + str(area) + ')->.searchArea;' + elementType + '(area.searchArea);' + elementType + '._[' + selector + ']; out ' + out + ';'
+    if not isinstance(elementType, list):
+        elementType = [elementType]
+    if not isinstance(selector, list):
+        selector = [selector]
+    query = 'area(' + str(area) + ')->.searchArea;('
+    for e in elementType:
+        query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + '(area.searchArea);'
+    query += '); out ' + out + ';'
+    return query
 
 class Overpass(CacheObject):
     def __init__(self, endpoint='http://overpass-api.de/api/', **kwargs):

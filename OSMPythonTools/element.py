@@ -39,9 +39,9 @@ class Element:
     def uid(self):
         return self.__getElement('uid')
     def lat(self):
-        return float(self.__getElement('lat'))
+        return float(self.__getElement('lat')) if self.__getElement('lat') else None
     def lon(self):
-        return float(self.__getElement('lon'))
+        return float(self.__getElement('lon')) if self.__getElement('lon') else None
     
     ### nodes
     def __nodes(self):

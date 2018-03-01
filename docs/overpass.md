@@ -4,7 +4,7 @@
 
 ## Performing queries
 
-OSM data can be accessed using the [http://wiki.openstreetmap.org/wiki/Overpass_API](Overpass API). While the Overpass API is powerful, it cannot automatically reverse geocode place names. We thus use Nominatim again to query the area id of, for example, NYC:
+OSM data can be accessed using the [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API). While the Overpass API is powerful, it cannot automatically reverse geocode place names. We thus use Nominatim again to query the area id of, for example, NYC:
 ```python
 from OSMPythonTools.nominatim import Nominatim
 nominatim = Nominatim()

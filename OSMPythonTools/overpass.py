@@ -114,7 +114,7 @@ class OverpassResult:
     ### elements
     def elements(self):
         es = self.__get('elements')
-        if len(es) == 1 and 'count' in es[0]:
+        if len(es) == 1 and 'type' in es[0] and es[0]['type'] == 'count':
             return None
         else:
             return self._elements
@@ -133,10 +133,10 @@ class OverpassResult:
     ### counting elements
     def __count(self, key, elements):
         es = self.__get('elements')
-        if len(es) != 1 or 'count' not in es[0] or key not in es[0]['count']:
+        if len(es) != 1 or 'type' not in es[0] or es[0]['type'] != 'count' or 'tags' not in es[0] or key not in es[0]['tags']:
             return len(elements) if elements is not None else None
         else:
-            return es[0]['count'][key]
+            return int(es[0]['tags'][key])
     def countElements(self):
         return self.__count('total', self.elements())
     def countNodes(self):

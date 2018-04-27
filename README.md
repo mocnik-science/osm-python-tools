@@ -58,11 +58,12 @@ This time, we have to first resolve the name "Vienna" to an area id:
 ```python
 from OSMPythonTools.nominatim import Nominatim
 nominatim = Nominatim()
-areaId = nominatim.query('Vienna').areaId()
+areaId = nominatim.query('Vienna, Austria').areaId()
 ```
 This area id can now be used to build the corresponding query:
 ```python
-from OSMPythonTools.overpass import overpassQueryBuilder
+from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
+overpass = Overpass()
 query = overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="tree"', out='count')
 result = overpass.query(query)
 result.countElements()
@@ -83,6 +84,7 @@ Before we can answer the question, we have to import some modules:
 ```python
 from collections import OrderedDict
 from OSMPythonTools.data import Data, dictRangeYears, ALL
+from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
 ```
 The question has two "dimensions": the dimension of time, and the dimension of different cities:
 ```python
@@ -97,6 +99,7 @@ dimensions = OrderedDict([
 ```
 We have to define how we fetch the data. We again use Nominatim and the Overpass API to query the data (it can take some time to perform this query the first time!):
 ```python
+overpass = Overpass()
 def fetch(year, city):
     areaId = nominatim.query(city).areaId()
     query = overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="tree"', out='count')

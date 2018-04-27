@@ -67,7 +67,7 @@ overpass = Overpass()
 query = overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="tree"', out='count')
 result = overpass.query(query)
 result.countElements()
-# 134520
+# 137830
 ```
 There are 134520 trees in the current OSM data of Vienna. How many have there been in 2013?
 ```python

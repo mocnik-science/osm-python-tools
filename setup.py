@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 name = 'OSMPythonTools'
 version = '0.2.0'

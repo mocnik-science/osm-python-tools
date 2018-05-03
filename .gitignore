@@ -4,3 +4,4 @@ __pycache__
 /dist
 /examples/cache
 /OSMPythonTools/__info__.py
+/OSMPythonTools.egg-info

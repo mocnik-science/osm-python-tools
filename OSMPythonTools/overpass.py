@@ -10,20 +10,22 @@ def _raiseException(prefix, msg):
     sys.tracebacklimit = None
     raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
 
-def overpassQueryBuilder(elementType=None, selector=None, area=None, out='body'):
+def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=None, out='body'):
     if not elementType:
         _raiseException('overpassQueryBuilder', 'Please provide an elementType')
     if not selector:
         _raiseException('overpassQueryBuilder', 'Please provide a selector')
-    if not area:
-        _raiseException('overpassQueryBuilder', 'Please provide an area')
+    if not area and not bbox:
+        _raiseException('overpassQueryBuilder', 'Please provide an area or a bounding box')
+    if area and bbox:
+        _raiseException('overpassQueryBuilder', 'Please do not provide an area and a bounding box')
     if not isinstance(elementType, list):
         elementType = [elementType]
     if not isinstance(selector, list):
         selector = [selector]
-    query = 'area(' + str(area) + ')->.searchArea;('
+    query = ('area(' + str(area) + ')->.searchArea;(') if area else '('
     for e in elementType:
-        query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + '(area.searchArea);'
+        query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + '(' + ('area.searchArea' if area else '') + (','.join(map(lambda x: str(x), bbox)) if bbox else '') + ');'
     query += '); out ' + out + ';'
     return query
 

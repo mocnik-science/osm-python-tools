@@ -78,7 +78,7 @@ class CacheObject:
         try:
             response = urllib.request.urlopen(request)
         except:
-            return None
+            raise Exception('The requested data could not be downloaded.  Please check whether your internet connection is working.')
         encoding = response.info().get_content_charset('utf-8')
         r = response.read().decode(encoding)
         return ujson.loads(r) if self.__jsonResult else r

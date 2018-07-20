@@ -2,6 +2,17 @@
 
 The python package `OSMPythonTools` provides easy access to [OpenStreetMap (OSM)](http://www.openstreetmap.org) related services, amongst them an [Overpass endpoint](http://wiki.openstreetmap.org/wiki/Overpass_API) and [Nominatim](http://nominatim.openstreetmap.org).
 
+## Installation
+
+To install `OSMPythonTools`, you will need `python3` and `pip` ([How to install pip](https://pip.pypa.io/en/stable/installing/)). Then execute:
+```shell
+pip install OSMPythonTools
+```
+On some operating systems, `pip` for `python3` will be named `pip3`:
+```shell
+pip3 install OSMPythonTools
+```
+
 ## Example 1
 
 *Which object does the way with the id `5887599` represent?*
@@ -15,8 +26,6 @@ way = api.query('way/5887599')
 The resulting object contains information about the way, which can easily be accessed:
 ```python
 way.tag('building')
-# 'yes'
-way.tag('historic')
 # 'castle'
 way.tag('architect')
 # 'Johann Lucas von Hildebrandt'
@@ -125,17 +134,6 @@ data.select(city=ALL).getCSV()
 ```
 
 More examples can be found inside the documentation of the modules.
-
-## Installation
-
-To install `OSMPythonTools`, you will need `python3` and `pip` ([How to install pip](https://pip.pypa.io/en/stable/installing/)). Then execute:
-```shell
-pip install OSMPythonTools
-```
-On some operating systems, `pip` for `python3` will be named `pip3`:
-```shell
-pip3 install OSMPythonTools
-```
 
 ## Usage
 

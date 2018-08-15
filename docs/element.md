@@ -55,3 +55,30 @@ relation.members()
 relation.members()[0].id()
 # 108402486
 ```
+
+## Accessing the history and data about the creation
+
+If explicitly queried, the resulting elements contain information about the history.  As an example, one can query for the changes made by the user `franz-benjamin` in `Heidelberg` in Marcht 2017:
+```python
+from OSMPythonTools.nominatim import Nominatim
+from OSMPythonTools.overpass import overpassQueryBuilder
+from OSMPythonTools.overpass import Overpass
+
+heidelberg = Nominatim().query('Heidelberg, Germany')
+query = overpassQueryBuilder(area=heidelberg.areaId(), elementType='node', since='2017-01-01T00:00:00Z', to='2017-02-01T00:00:00Z', user='franz-benjamin', out='meta')
+changedNodes = Overpass().query(query)
+```
+
+It is important to use `out='meta'` because this will fetch the meta data about the history and the creation of the corresponding elements:
+```python
+changedNodes.elements()[0].version()
+# 8
+changedNodes.elements()[0].changeset()
+# 44871772
+changedNodes.elements()[0].user()
+# 'franz-benjamin'
+changedNodes.elements()[0].userid()
+# 4913117
+changedNodes.elements()[0].timestamp()
+'2017-01-03T13:47:23Z'
+```

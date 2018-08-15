@@ -11,27 +11,31 @@ def _raiseException(prefix, msg):
     sys.tracebacklimit = None
     raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
 
-def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], since=None, to=None, userId=None, user=None, out='body'):
+def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], since=None, to=None, userid=None, user=None, out='body'):
     if not elementType:
         _raiseException('overpassQueryBuilder', 'Please provide an elementType')
     if not area and not bbox:
         _raiseException('overpassQueryBuilder', 'Please provide an area or a bounding box')
     if area and bbox:
         _raiseException('overpassQueryBuilder', 'Please do not provide an area and a bounding box')
-    if userId and user:
+    if userid and user:
         _raiseException('overpassQueryBuilder', 'Please do only provide one of the following: user id and username')
     if not isinstance(elementType, list):
         elementType = [elementType]
     if not isinstance(selector, list):
         selector = [selector]
-    if userId and not isinstance(userId, list):
-        userId = [userId]
+    if userid and not isinstance(userid, list):
+        userid = [userid]
+    if user and not isinstance(user, list):
+        user = [user]
     dateRestriction = '(changed:"' + since + '"' + (',"' + to + '"' if to else '') + ')' if since else ''
-    userRestriction = '(uid:' + ','.join(map(str, userId)) + ')' if userId else ''
-    userRestriction2 = '(user:' + ','.join(map(lambda u: '"' + user + '"')) + ')' if user else ''
+    userRestriction = '(uid:' + ','.join(map(str, userid)) + ')' if userid else ''
+    userRestriction2 = '(user:' + ','.join(map(lambda u: '"' + u + '"', user)) + ')' if user else ''
+    searchArea = '(' + 'area.searchArea' + ')' if area else ''
+    searchBbox = '(' + ','.join(map(str, bbox)) + ')' if bbox else ''
     query = ('area(' + str(area) + ')->.searchArea;(') if area else '('
     for e in elementType:
-        query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + dateRestriction + userRestriction + userRestriction2 + '(' + ('area.searchArea' if area else '') + (','.join(map(lambda x: str(x), bbox)) if bbox else '') + ');'
+        query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + dateRestriction + userRestriction + userRestriction2 + searchArea + searchBbox + ';'
     query += '); out ' + out + ';'
     return query
 

@@ -38,6 +38,8 @@ class Element:
         return self.__getElement('user')
     def uid(self):
         return self.__getElement('uid')
+    def userid(self):
+        return self.__getElement('uid')
     def lat(self):
         return float(self.__getElement('lat')) if self.__getElement('lat') else None
     def lon(self):

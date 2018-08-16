@@ -58,7 +58,7 @@ relation.members()[0].id()
 
 ## Accessing the history and data about the creation
 
-If explicitly queried, the resulting elements contain information about the history.  As an example, one can query for the changes made by the user `franz-benjamin` in `Heidelberg` in Marcht 2017:
+If explicitly queried, the resulting elements contain information about the history.  As an example, one can query for the changes made by the user `franz-benjamin` in `Heidelberg` in March 2017:
 ```python
 from OSMPythonTools.nominatim import Nominatim
 from OSMPythonTools.overpass import overpassQueryBuilder

@@ -6,7 +6,9 @@ class Nominatim(CacheObject):
     def __init__(self, endpoint='https://nominatim.openstreetmap.org/search', **kwargs):
         super().__init__('nominatim', endpoint, **kwargs)
     
-    def _queryString(self, query, params=None):
+    def _queryString(self, query, wkt=False, params={}):
+        if wkt:
+            params['polygon_text'] = '1'
         return (query, query, params)
     
     def _queryRequest(self, endpoint, queryString, params={}):
@@ -35,3 +37,8 @@ class NominatimResult:
             if 'osm_type' in d and d['osm_type'] == 'relation' and 'osm_id' in d:
                 return 3600000000 + int(d['osm_id'])
         return None
+
+    def wkt(self):
+        for d in self._json:
+            if 'geotext' in d:
+                return d['geotext']

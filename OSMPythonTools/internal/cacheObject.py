@@ -50,7 +50,7 @@ class CacheObject:
     def _queryString(self, *args, **kwargs):
         raise(NotImplementedError('Subclass should implement _queryString'))
     
-    def _queryRequest(self, endpoint, queryString, params):
+    def _queryRequest(self, endpoint, queryString, params={}):
         raise(NotImplementedError('Subclass should implement _queryRequest'))
     
     def _rawToResult(self, data):
@@ -71,7 +71,7 @@ class CacheObject:
         return h.hexdigest()
     
     def __query(self, requestString, params):
-        request = self._queryRequest(self._endpoint, requestString, params)
+        request = self._queryRequest(self._endpoint, requestString, params=params)
         if not isinstance(request, urllib.request.Request):
             request = urllib.request.Request(request)
         request.headers['User-Agent'] = self._userAgent()

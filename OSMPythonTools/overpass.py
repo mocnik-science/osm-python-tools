@@ -46,7 +46,7 @@ class Overpass(CacheObject):
     def queryString(self, *args, **kwargs):
         return self._queryString(*args, **kwargs)
     
-    def _queryString(self, query, timeout=25, date=None, out='json', settings={}):
+    def _queryString(self, query, timeout=25, date=None, out='json', settings={}, params=None):
         settingsNotInHash = {
             'timeout': timeout,
         }
@@ -55,9 +55,9 @@ class Overpass(CacheObject):
         settings['out'] = out
         hashString = ''.join(['[' + k + ':' + str(v) + ']' for (k, v) in sorted(settings.items())]) + ';' + query
         queryString = ''.join(['[' + k + ':' + str(v) + ']' for (k, v) in sorted(settingsNotInHash.items())]) + hashString
-        return (queryString, hashString)
+        return (queryString, hashString, params)
     
-    def _queryRequest(self, endpoint, queryString):
+    def _queryRequest(self, endpoint, queryString, params={}):
         return urllib.request.Request(endpoint + 'interpreter', urllib.parse.urlencode({'data': queryString}).encode('utf-8'))
     
     def _rawToResult(self, data, queryString):

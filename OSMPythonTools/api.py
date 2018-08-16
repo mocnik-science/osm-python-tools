@@ -11,10 +11,10 @@ class Api(CacheObject):
     def __init__(self, endpoint='http://www.openstreetmap.org/api/0.6/', **kwargs):
         super().__init__('api', endpoint, jsonResult=False, **kwargs)
     
-    def _queryString(self, query):
-        return (query, query)
+    def _queryString(self, query, params=None):
+        return (query, query, params)
     
-    def _queryRequest(self, endpoint, queryString):
+    def _queryRequest(self, endpoint, queryString, params={}):
         return endpoint + queryString
     
     def _rawToResult(self, data, queryString):

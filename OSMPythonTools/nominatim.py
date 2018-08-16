@@ -6,11 +6,15 @@ class Nominatim(CacheObject):
     def __init__(self, endpoint='https://nominatim.openstreetmap.org/search', **kwargs):
         super().__init__('nominatim', endpoint, **kwargs)
     
-    def _queryString(self, query):
-        return (query, query)
+    def _queryString(self, query, params=None):
+        return (query, query, params)
     
-    def _queryRequest(self, endpoint, queryString):
-        return endpoint + '?format=json&q=' + urllib.parse.quote_plus(queryString, safe='')
+    def _queryRequest(self, endpoint, queryString, params={}):
+        if not params:
+            params = {}
+        params['format'] = 'json'
+        params['q'] = queryString
+        return endpoint + '?' + urllib.parse.urlencode(params)
     
     def _rawToResult(self, data, queryString):
         return NominatimResult(data, queryString)

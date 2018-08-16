@@ -16,8 +16,8 @@ class CacheObject:
         self.__jsonResult = jsonResult
     
     def query(self, *args, onlyCached=False, **kwargs):
-        queryString, hashString = self._queryString(*args, **kwargs)
-        filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString)
+        queryString, hashString, params = self._queryString(*args, **kwargs)
+        filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(params) if params else ''))
         if not os.path.exists(self.__cacheDir):
             os.makedirs(self.__cacheDir)
         if os.path.exists(filename):
@@ -32,7 +32,7 @@ class CacheObject:
                 if self.__lastQuery and self.__waitBetweenQueries and time.time() - self.__lastQuery < self.__waitBetweenQueries:
                     time.sleep(self.__waitBetweenQueries - time.time() + self.__lastQuery)
             self.__lastQuery = time.time()
-            data = self.__query(queryString)
+            data = self.__query(queryString, params)
             with open(filename, 'w') as file:
                 ujson.dump(data, file)
         result = self._rawToResult(data, queryString)
@@ -50,7 +50,7 @@ class CacheObject:
     def _queryString(self, *args, **kwargs):
         raise(NotImplementedError('Subclass should implement _queryString'))
     
-    def _queryRequest(self, endpoint, queryString):
+    def _queryRequest(self, endpoint, queryString, params):
         raise(NotImplementedError('Subclass should implement _queryRequest'))
     
     def _rawToResult(self, data):
@@ -70,8 +70,8 @@ class CacheObject:
         h.update(x.encode('utf-8'))
         return h.hexdigest()
     
-    def __query(self, requestString):
-        request = self._queryRequest(self._endpoint, requestString)
+    def __query(self, requestString, params):
+        request = self._queryRequest(self._endpoint, requestString, params)
         if not isinstance(request, urllib.request.Request):
             request = urllib.request.Request(request)
         request.headers['User-Agent'] = self._userAgent()

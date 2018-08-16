@@ -46,7 +46,7 @@ class Overpass(CacheObject):
     def queryString(self, *args, **kwargs):
         return self._queryString(*args, **kwargs)
     
-    def _queryString(self, query, timeout=25, date=None, out='json', settings={}, params=None):
+    def _queryString(self, query, timeout=25, date=None, out='json', settings={}, params={}):
         settingsNotInHash = {
             'timeout': timeout,
         }

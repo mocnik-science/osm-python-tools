@@ -17,7 +17,7 @@ class CacheObject:
     
     def query(self, *args, onlyCached=False, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
-        filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(params) if params else ''))
+        filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
         if not os.path.exists(self.__cacheDir):
             os.makedirs(self.__cacheDir)
         if os.path.exists(filename):

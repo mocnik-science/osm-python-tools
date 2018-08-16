@@ -21,6 +21,14 @@ heidelberg.toJSON()
 # [{'place_id': '580259', 'licence': 'Data © OpenStreetMap ...
 ```
 
+If you want to know the geometry as [well-known text](https://en.wikipedia.org/wiki/Well-known_text), you have to provide an corresponding parameter for the request, because this will inform the Nominatim webservie to provide the geometry in the result:
+```python
+heidelberg = nominatim.query('Heidelberg', wkt=True)
+heidelberg.wkt()
+# 'POINT(8.694724 49.4093582)'
+```
+Additional parameters can be sent with the query request by providing a `params` dictionary to `nominatim.query`.
+
 ## Parameters
 
 As a default, `OSMPythonTools.Nominatim` uses the endpoint `https://nominatim.openstreetmap.org/search`. If another one should be used, for example, a local one, corresponding data can be provided:

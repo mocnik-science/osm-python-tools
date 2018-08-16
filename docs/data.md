@@ -17,7 +17,7 @@ from collections import OrderedDict
 dimensions = OrderedDict([
   ('year', dictRangeYears(2013, 2017.5, 1)),
   ('city', OrderedDict({
-    'heidelberg', 'Heidelberg, Germany',
+    'heidelberg': 'Heidelberg, Germany',
     'manhattan': 'Manhattan, New York',
     'vienna': 'Vienna, Austria',
   })),
@@ -197,3 +197,56 @@ The following methods are not documented:
 * `renameColumns`: rename a column
 * `selectColumns`: select a number of columns
 * `showPlot`: different plot can be combined (by using `showPlot=False`); the function `showPlot` is then called to show the plot.
+
+## Further example: more complex query
+
+One might want to access and aggregate more complex data. In contrast to the examples above, one can also query for single users contributing different types of elements to a certain region.  First, we define again the different dimensions:
+```python
+from OSMPythonTools.nominatim import Nominatim
+from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
+from OSMPythonTools.data import Data, dictRangeYears, ALL
+
+from collections import OrderedDict
+
+dimensions = OrderedDict([
+  ('elementType', OrderedDict({
+    'node': 'node',
+    'way': 'way',
+    'relation': 'relation',
+  })),
+  ('user', OrderedDict({
+    'franz-benjamin': 'franz-benjamin',
+    'tyr_asd': 'tyr_asd',
+  })),
+])
+```
+
+Then, we have to determine the ID of the area we would like to examine. As an example, we can determine this ID for Heidelberg:
+```python
+nominatim = Nominatim()
+areaId = nominatim.query('Heidelberg').areaId()
+```
+
+Finally, the data can be queried as follows:
+```python
+overpass = Overpass()
+
+def fetch(elementType, user):
+    query = overpassQueryBuilder(area=areaId, elementType=elementType, since='2017-01-01T00:00:00Z', to='2017-02-01T00:00:00Z', user=user, out='meta')
+    return overpass.query(query, timeout=500).countElements()
+
+data = Data(fetch, dimensions)
+```
+Note that we have restricted the query to a certain short period. On might easily use a temporal dimension to add further periods of time.
+
+As before, the object `data` contains the results of the queries and can be imagined as being a table:
+```
+                            value
+elementType user
+node        franz-benjamin     43
+            tyr_asd            24
+way         franz-benjamin      7
+            tyr_asd             7
+relation    franz-benjamin      0
+            tyr_asd             1
+```

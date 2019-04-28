@@ -41,8 +41,9 @@ class CacheObject:
         return result
     
     def deleteQueryFromCache(self, *args, **kwargs):
-        queryString, hashString = self._queryString(*args, **kwargs)
-        filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString)
+        queryString, hashString, params = self._queryString(*args, **kwargs)
+        filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(
+                   hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
         if os.path.exists(filename):
             print('[' + self._prefix + '] removing cached data: ' + queryString)
             os.remove(filename)

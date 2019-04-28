@@ -78,6 +78,8 @@ class CacheObject:
         request.headers['User-Agent'] = self._userAgent()
         try:
             response = urllib.request.urlopen(request)
+        except urllib.request.HTTPError as err:
+            raise Exception('The requested data could not be downloaded. ' + str(err))
         except:
             raise Exception('The requested data could not be downloaded.  Please check whether your internet connection is working.')
         encoding = response.info().get_content_charset('utf-8')

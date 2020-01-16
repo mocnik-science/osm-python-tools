@@ -35,7 +35,7 @@ way.tag('website')
 
 ## Example 2
 
-*What is the English name of the church called "Stephansdom", what address does it have, and which of which denomination is the church?*
+*What is the English name of the church called ‘Stephansdom’, what address does it have, and which of which denomination is the church?*
 
 We use the Overpass API to query the corresponding data:
 ```python
@@ -63,7 +63,7 @@ stephansdom.tag('denomination')
 
 *How many trees are in the OSM data of Vienna? And how many trees have there been in 2013?*
 
-This time, we have to first resolve the name "Vienna" to an area id:
+This time, we have to first resolve the name ‘Vienna’ to an area id:
 ```python
 from OSMPythonTools.nominatim import Nominatim
 nominatim = Nominatim()
@@ -95,7 +95,7 @@ from collections import OrderedDict
 from OSMPythonTools.data import Data, dictRangeYears, ALL
 from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
 ```
-The question has two "dimensions": the dimension of time, and the dimension of different cities:
+The question has two ‘dimensions’: the dimension of time, and the dimension of different cities:
 ```python
 dimensions = OrderedDict([
     ('year', dictRangeYears(2013, 2017.5, 1)),

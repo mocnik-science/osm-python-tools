@@ -61,8 +61,7 @@ relation.members()[0].id()
 If explicitly queried, the resulting elements contain information about the history.  As an example, one can query for the changes made by the user `franz-benjamin` in `Heidelberg` in March 2017:
 ```python
 from OSMPythonTools.nominatim import Nominatim
-from OSMPythonTools.overpass import overpassQueryBuilder
-from OSMPythonTools.overpass import Overpass
+from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
 
 heidelberg = Nominatim().query('Heidelberg, Germany')
 query = overpassQueryBuilder(area=heidelberg.areaId(), elementType='node', since='2017-01-01T00:00:00Z', to='2017-02-01T00:00:00Z', user='franz-benjamin', out='meta')

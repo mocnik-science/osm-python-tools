@@ -6,7 +6,7 @@ The module contains tools for easily collecting, mining, and drawing data from O
 
 ## Querying data
 
-Imagine the following example: we try to understand how the number of roads has developed over time in different cities. We are not only interested in the number of roads in general, but also to different kind of roads. We first fomulate different "dimensions", for example, the temporal dimension, the dimension of different cities, and the dimension of different roads (this example is [part of the repository](https://github.com/mocnik-science/osm-python-tools/blob/master/examples/example.py)):
+Imagine the following example: we try to understand how the number of roads has developed over time in different cities. We are not only interested in the number of roads in general, but also to different kind of roads. We first fomulate different ‘dimensions’, for example, the temporal dimension, the dimension of different cities, and the dimension of different roads (this example is [part of the repository](https://github.com/mocnik-science/osm-python-tools/blob/master/examples/example.py)):
 ```python
 from OSMPythonTools.nominatim import Nominatim
 from OSMPythonTools.overpass import Overpass, overpassQueryBuilder

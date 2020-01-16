@@ -87,6 +87,31 @@ result.countElements()
 
 ## Example 4
 
+*Where are waterbodies located in Vienna?*
+
+Again, we have to resolve the name ‘Vienna’ before running the query:
+```python
+from OSMPythonTools.nominatim import Nominatim
+nominatim = Nominatim()
+areaId = nominatim.query('Vienna, Austria').areaId()
+```
+The query can be built like in the examples before.  This time, however, the argument `includeGeometry=True` is provided to the `overpassQueryBuilder` in order to let him generate a query that downloads the geometry data.
+```python
+from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
+overpass = Overpass()
+query = overpassQueryBuilder(area=areaId, elementType=['way', 'relation'], selector='"natural"="water"', includeGeometry=True)
+result = overpass.query(query)
+```
+Next, we can exemplarily choose one random waterbody (the first one of the download ones) and compute its geomtry like follows:
+```python
+firstElement = result.elements()[0]
+firstElement.geometry()
+# {"coordinates": [[[16.498671, 48.27628], [16.4991, 48.276345], ... ]], "type": "Polygon"}
+```
+Observe that the resulting geometry is provided in the [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) format.
+
+## Example 5
+
 *How did the number of trees in Berlin, Paris, and Vienna change over time?*
 
 Before we can answer the question, we have to import some modules:

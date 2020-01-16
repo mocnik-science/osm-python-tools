@@ -1,4 +1,13 @@
+import copy
+import geojson
 import sys
+
+def _raiseException(prefix, msg):
+    sys.tracebacklimit = None
+    raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
+
+def _extendAndRaiseException(e, msg):
+    raise(Exception(str(e) + msg))
 
 class SingletonApi():
     __instance = None
@@ -13,6 +22,9 @@ class Element:
     def __init__(self, json=None, soup=None):
         self._json = json
         self._soup = soup
+
+    def _raiseException(self, msg):
+        _raiseException('Element', msg)
 
     def __getElement(self, prop):
         if self._json is not None:
@@ -44,7 +56,9 @@ class Element:
         return float(self.__getElement('lat')) if self.__getElement('lat') else None
     def lon(self):
         return float(self.__getElement('lon')) if self.__getElement('lon') else None
-    
+    def geometry(self):
+        return self.geometry()
+
     ### nodes
     def __nodes(self):
         return self.__getElement('nodes') if self._json is not None else self._soup.find_all('nd')
@@ -79,3 +93,122 @@ class Element:
     def tag(self, key):
         tags = self.tags()
         return tags[key] if key in tags else None
+
+    ### geometry
+    def geometry(self):
+        try:
+            if self.type() == 'node':
+                if not self.lon() or not self.lat():
+                    self._raiseException('Cannot build geometry: geometry information not included.')
+                return geojson.Point((self.lon(), self.lat()))
+            elif self.type() == 'way':
+                if not self.__getElement('geometry'):
+                    self._raiseException('Cannot build geometry: geometry information not included.')
+                cs = self.__geometry_csToList(self.__getElement('geometry'))
+                if self.__geometry_equal(cs[0], cs[-1]):
+                    return geojson.Polygon([cs])
+                else:
+                    return geojson.LineString(cs)
+            elif self.type() == 'relation':
+                members = copy.deepcopy(self.__members())
+                membersOuter = self.__geometry_extract(members, 'outer')
+                if len(membersOuter) == 0:
+                    self._raiseException('Cannot build geometry: no outer rings found.')
+                membersInner = self.__geometry_extract(members, 'inner')
+                ringsOuter = self.__geometry_buildRings(membersOuter)
+                ringsInner = self.__geometry_buildRings(membersInner)
+                ringsOuter = self.__geometry_orientRings(ringsOuter, positive=True)
+                ringsInner = self.__geometry_orientRings(ringsInner, positive=False)
+                polygons = self.__geometry_buildPolygons(ringsOuter, ringsInner)
+                if len(polygons) > 1:
+                    return geojson.MultiPolygon(polygons)
+                else:
+                    return geojson.Polygon(polygons[0])
+            else:
+                self._raiseException('Cannot build geometry: type of element unknown.')
+        except Exception as e:
+            _extendAndRaiseException(e, ' ({}/{})'.format(self.type(), self.id()))
+    def __geometry_equal(self, x, y):
+        return x[0] == y[0] and x[1] == y[1]
+    def __geometry_pointInsidePolygon(self, p, polygon):
+        x = p[0]
+        y = p[1]
+        inside = False
+        n = len(polygon)
+        px, py = polygon[0]
+        for i in range(n + 1):
+            qx, qy = polygon[i % n]
+            if y > min(py, qy):
+                if y <= max(py, qy):
+                    if x <= max(px, qx):
+                        if py != qy:
+                            xintersect = (y - py) * (qx - px) / (qy - py) + px
+                        if px == qx or x <= xintersect:
+                            inside = not inside
+            px, py = qx, qy
+        return inside
+    def __geometry_polygonPositiveOriented(self, polygon):
+        signedArea = 0
+        n = len(polygon)
+        px, py = polygon[0]
+        for i in range(n + 1):
+            qx, qy = polygon[i % n]
+            signedArea += px * qy - qx * py
+        signedArea = signedArea / 2
+        return signedArea > 0
+    def __geometry_orientRings(self, rings, positive=True):
+        return [list(reversed(r)) if positive ^ self.__geometry_polygonPositiveOriented(r) else r for r in rings]
+    def __geometry_csToList(self, cs):
+        return [(c['lon'], c['lat']) for c in cs]
+    def __geometry_extract(self, members, role):
+        extracted = []
+        for m in members:
+            if m['role'] == role:
+                if 'geometry' in m:
+                    extracted.append(self.__geometry_csToList(m['geometry']))
+                else:
+                    self._raiseException('Cannot build geometry: relation in relation not supported.')
+        return extracted
+    def __geometry_buildRings(self, members):
+        rings = []
+        r = []
+        while len(members) > 0:
+            if not r:
+                r.extend(members.pop())
+            if len(r) > 3 and self.__geometry_equal(r[0], r[-1]):
+                rings.append(r)
+                r = []
+            else:
+                found = False
+                for i, m in enumerate(members):
+                    if self.__geometry_equal(r[-1], m[0]):
+                        found = True
+                    elif self.__geometry_equal(r[-1], m[-1]):
+                        found = True
+                        m.reverse()
+                    if found:
+                        r.extend(m[1:])
+                        del members[i]
+                        break
+                if not found:
+                    self._raiseException('Cannot build geometry: cannot close ring.')
+        if len(r) > 3 and self.__geometry_equal(r[0], r[-1]):
+            rings.append(r)
+        elif r:
+            self._raiseException('Cannot build geometry: cannot close ring.')
+        return rings
+    def __geometry_buildPolygons(self, ringsOuter, ringsInner):
+        polygons = []
+        for r in ringsOuter:
+            polygon = [r]
+            ringsInnerTodo = []
+            for r2 in ringsInner:
+                if self.__geometry_pointInsidePolygon(r2[0], r):
+                    polygon.append(r2)
+                else:
+                    ringsInnerTodo.append(r2)
+            ringsInner = ringsInnerTodo
+            polygons.append(polygon)
+        if len(ringsInner) > 0:
+            self._raiseException('Cannot build geometry: cannot find outer ring for inner ring.')
+        return polygons

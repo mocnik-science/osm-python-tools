@@ -24,6 +24,10 @@ The variable `query` is just a string containing the query:
 ```
 'area(3600175905)->.searchArea;(node["highway"="bus_stop"](area.searchArea);); out body;'
 ```
+Also, the geometry can be included in the download:
+```python
+query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', out='body', includeGeometry=True)
+```
 
 If not only one `elementType` or `selector` shall be queried for, also lists can be provided for both parameters:
 ```python

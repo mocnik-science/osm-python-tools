@@ -56,6 +56,24 @@ relation.members()[0].id()
 # 108402486
 ```
 
+## Accessing the geometry
+
+In order to receive geometry information, the argument `includeGeometry=True` needs to be provided to the `overpassQueryBuilder` in order to let him generate a query that downloads the geometry data.  As an example, one can query for all waterbodies in Vienna:
+```python
+from OSMPythonTools.nominatim import Nominatim
+from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
+
+vienna = Nominatim().query('Vienna, Austria')
+query = overpassQueryBuilder(area=vienna.areaId(), elementType=['way', 'relation'], selector='"natural"="water"', includeGeometry=True)
+result = Overpass().query(query)
+```
+The geometry of the downloaded elements can be obtained in the [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) format:
+```python
+result.elements()[0].geometry()
+# {"coordinates": [[[16.498671, 48.27628], [16.4991, 48.276345], ... ]], "type": "Polygon"}
+```
+Some relations contain invalid geometries.  If this is the case, an exception is returned.
+
 ## Accessing the history and data about the creation
 
 If explicitly queried, the resulting elements contain information about the history.  As an example, one can query for the changes made by the user `franz-benjamin` in `Heidelberg` in March 2017:

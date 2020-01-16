@@ -11,7 +11,7 @@ def _raiseException(prefix, msg):
     sys.tracebacklimit = None
     raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
 
-def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], since=None, to=None, userid=None, user=None, out='body'):
+def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], since=None, to=None, userid=None, user=None, includeGeometry=False, out='body'):
     if not elementType:
         _raiseException('overpassQueryBuilder', 'Please provide an elementType')
     if not area and not bbox:
@@ -36,7 +36,7 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], si
     query = ('area(' + str(area) + ')->.searchArea;(') if area else '('
     for e in elementType:
         query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + dateRestriction + userRestriction + userRestriction2 + searchArea + searchBbox + ';'
-    query += '); out ' + out + ';'
+    query += '); out ' + out + (' geom' if includeGeometry and 'geom' not in [o.strip() for o in out.split()] else '') + ';'
     return query
 
 class Overpass(CacheObject):

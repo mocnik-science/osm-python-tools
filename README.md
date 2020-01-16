@@ -174,6 +174,6 @@ The following modules are available (please click on their names to access furth
 
 This application is written and maintained by Franz-Benjamin Mocnik, <mail@mocnik-science.net>.
 
-(c) by Franz-Benjamin Mocnik, 2017-2019.
+(c) by Franz-Benjamin Mocnik, 2017-2020.
 
 The code is licensed under the [GPL-3](https://github.com/mocnik-science/osm-python-tools/blob/master/LICENSE.md).

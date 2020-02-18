@@ -14,7 +14,6 @@ setup(
     packages = ['OSMPythonTools', 'OSMPythonTools.internal'],
     install_requires = [
         'beautifulsoup4',
-        'datetime',
         'geojson',
         'lxml',
         'matplotlib',

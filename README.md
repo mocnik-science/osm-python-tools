@@ -176,4 +176,4 @@ This application is written and maintained by Franz-Benjamin Mocnik, <mail@mocni
 
 (c) by Franz-Benjamin Mocnik, 2017-2020.
 
-The code is licensed under the [GPL-3](https://github.com/mocnik-science/osm-python-tools/blob/master/LICENSE.md).
+The code is licensed under the [GPL-3](https://github.com/mocnik-science/osm-python-tools/blob/master/LICENSE).

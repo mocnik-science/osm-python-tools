@@ -1,1 +1,1 @@
-from OSMPythonTools.__info__ import __name__, __version__, __url__
+from OSMPythonTools.__info__ import pkgName, pkgVersion, pkgUrl

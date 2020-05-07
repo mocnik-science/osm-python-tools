@@ -63,7 +63,7 @@ class CacheObject:
         return None
     
     def _userAgent(self):
-        return '%s/%s (%s)' % (OSMPythonTools.__name__, OSMPythonTools.__version__, OSMPythonTools.__url__)
+        return '%s/%s (%s)' % (OSMPythonTools.pkgName, OSMPythonTools.pkgVersion, OSMPythonTools.pkgUrl)
     
     def __hash(self, x):
         h = hashlib.sha1()

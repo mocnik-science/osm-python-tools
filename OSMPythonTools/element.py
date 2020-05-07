@@ -21,8 +21,9 @@ class Element:
         _raiseException('Element', msg)
 
     def __getElement(self, prop):
-        if not self._shallow and prop not in ['type', 'id']:
+        if self._shallow and prop not in ['type', 'id']:
             self._unshallow()
+            self._shallow = False
         if self._json is not None:
             return self._json[prop] if prop in self._json else None
         return self._soup[prop] if self._isValid and prop in self._soup.attrs else None

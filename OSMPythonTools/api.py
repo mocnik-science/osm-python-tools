@@ -19,10 +19,10 @@ class Api(CacheObject):
         return endpoint + queryString
     
     def _rawToResult(self, data, queryString, shallow=False):
-        return ApiResult(data, queryString)
+        return ApiResult(data, queryString, shallow=shallow)
 
 class ApiResult(Element):
-    def __init__(self, xml, queryString):
+    def __init__(self, xml, queryString, shallow=False):
         self._isValid = (xml != {} and xml is not None)
         self._xml = xml
         self._soup = None
@@ -35,7 +35,7 @@ class ApiResult(Element):
                 soupElement = self._soup.way
             if len(self._soup.find_all('relation')) > 0:
                 soupElement = self._soup.relation
-        super().__init__(soup=soupElement)
+        super().__init__(soup=soupElement, shallow=shallow)
         self._queryString = queryString
     
     def _unshallow(self):

@@ -19,7 +19,7 @@ class Nominatim(CacheObject):
         params['q'] = queryString
         return endpoint + '?' + urllib.parse.urlencode(params)
     
-    def _rawToResult(self, data, queryString):
+    def _rawToResult(self, data, queryString, shallow=False):
         return NominatimResult(data, queryString)
 
 class NominatimResult:

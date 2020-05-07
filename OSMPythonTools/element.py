@@ -2,6 +2,8 @@ import copy
 import geojson
 import sys
 
+from OSMPythonTools.internal.singletonApi import SingletonApi
+
 def _raiseException(prefix, msg):
     sys.tracebacklimit = None
     raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
@@ -9,27 +11,24 @@ def _raiseException(prefix, msg):
 def _extendAndRaiseException(e, msg):
     raise(Exception(str(e) + msg))
 
-class SingletonApi():
-    __instance = None
-    def __init__(self, *args, **kwargs):
-        from OSMPythonTools.api import Api
-        if not SingletonApi.__instance:
-            SingletonApi.__instance = Api(*args, **kwargs)
-    def __getattr__(self, name):
-        return getattr(self.__instance, name)
-
 class Element:
-    def __init__(self, json=None, soup=None):
+    def __init__(self, json=None, soup=None, shallow=False):
         self._json = json
         self._soup = soup
+        self._shallow = shallow
 
     def _raiseException(self, msg):
         _raiseException('Element', msg)
 
     def __getElement(self, prop):
+        if not self._shallow and prop not in ['type', 'id']:
+            self._unshallow()
         if self._json is not None:
             return self._json[prop] if prop in self._json else None
         return self._soup[prop] if self._isValid and prop in self._soup.attrs else None
+
+    def _unshallow(self):
+        raise(NotImplementedError('Subclass should implement _unshallow'))
 
     ### properties
     def type(self):
@@ -62,12 +61,20 @@ class Element:
     ### nodes
     def __nodes(self):
         return self.__getElement('nodes') if self._json is not None else self._soup.find_all('nd')
-    def nodes(self):
+    def nodes(self, shallow=True):
         nodes = self.__nodes()
         if nodes is None or len(nodes) == 0:
             return []
         api = SingletonApi()
-        return list(map(lambda n: api.query('node/' + str(n if self._json is not None else n['ref'])), nodes))
+        if shallow:
+            return list(map(lambda n: api.query('node/' + str(n if self._json is not None else n['ref']), shallow='''
+<?xml version="1.0" encoding="UTF-8"?>
+<osm>
+    <node id="''' + str(n if self._json is not None else n['ref']) + '''"/>
+</osm>
+            '''), nodes))
+        else:
+            return list(map(lambda n: api.query('node/' + str(n if self._json is not None else n['ref'])), nodes))
     def countNodes(self):
         nodes = self.__nodes()
         return len(nodes) if nodes is not None else None
@@ -75,12 +82,20 @@ class Element:
     ### members
     def __members(self):
         return self.__getElement('members') if self._json is not None else self._soup.find_all('member')
-    def members(self):
+    def members(self, shallow=True):
         members = self.__members()
         if members is None or len(members) == 0:
             return []
         api = SingletonApi()
-        return list(map(lambda m: api.query(m['type'] + '/' + str(m['ref'])), members))
+        if shallow:
+            return list(map(lambda m: api.query(m['type'] + '/' + str(m['ref']), shallow='''
+<?xml version="1.0" encoding="UTF-8"?>
+<osm>
+    <''' + m['type'] + ''' id="''' + str(m['ref']) + '''"/>
+</osm>
+            '''), members))
+        else:
+            return list(map(lambda m: api.query(m['type'] + '/' + str(m['ref'])), members))
     def countMembers(self):
         members = self.__members()
         return len(members) if members is not None else None

@@ -15,7 +15,7 @@ class CacheObject:
         self.__lastQuery = None
         self.__jsonResult = jsonResult
     
-    def query(self, *args, onlyCached=False, **kwargs):
+    def query(self, *args, onlyCached=False, shallow=False, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
         filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
         if not os.path.exists(self.__cacheDir):
@@ -26,6 +26,8 @@ class CacheObject:
         elif onlyCached:
             print('[' + self._prefix + '] data not cached: ' + queryString)
             return None
+        elif shallow:
+            data = shallow
         else:
             print('[' + self._prefix + '] downloading data: ' + queryString)
             if self._waitForReady() == None:
@@ -35,7 +37,7 @@ class CacheObject:
             data = self.__query(queryString, params)
             with open(filename, 'w') as file:
                 ujson.dump(data, file)
-        result = self._rawToResult(data, queryString)
+        result = self._rawToResult(data, queryString, shallow=shallow)
         if not self._isValid(result):
             raise(Exception('[' + self._prefix + '] error in result (' + filename + '): ' + queryString))
         return result
@@ -53,7 +55,7 @@ class CacheObject:
     def _queryRequest(self, endpoint, queryString, params={}):
         raise(NotImplementedError('Subclass should implement _queryRequest'))
     
-    def _rawToResult(self, data):
+    def _rawToResult(self, data, shallow=False):
         raise(NotImplementedError('Subclass should implement _rawToResult'))
     
     def _isValid(self, result):

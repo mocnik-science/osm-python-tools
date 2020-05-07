@@ -56,6 +56,20 @@ relation.members()[0].id()
 # 108402486
 ```
 
+It should be noted that the nodes and members accessed this way are shallow by default.  That is, the objects representing these elements (nodes and members) have only preloaded the type and the id of the element.  If more properties of the elements are accessed, the corresponding data is automatically downloaded and cached.  Accordingly, the command
+```python
+way.nodes()[0].id()
+```
+does not download the data for the nodes but rather just outputs the id.  If the latitude of the first node shall be accessed, this can be done as follows:
+```python
+way.nodes()[0].lat()
+```
+As the data is downloaded only when needed and as the elements (in this case the nodes) are shallow by default, the data is only downloaded for the first node.  In rare cases, the data should be downloaded for elements.  In this case, the parameter `shallow=False` needs to be added:
+```python
+way.nodes(shallow=False)
+```
+Members of a relation are shallow by default as well, and the same parameter `shallow=False` can be used.
+
 ## Accessing the geometry
 
 In order to receive geometry information, the argument `includeGeometry=True` needs to be provided to the `overpassQueryBuilder` in order to let him generate a query that downloads the geometry data.  As an example, one can query for all waterbodies in Vienna:

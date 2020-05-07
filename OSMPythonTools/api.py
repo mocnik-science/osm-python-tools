@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 
 from OSMPythonTools.element import Element
 from OSMPythonTools.internal.cacheObject import CacheObject
+from OSMPythonTools.internal.singletonApi import SingletonApi
 
 def _raiseException(prefix, msg):
     sys.tracebacklimit = None
@@ -17,7 +18,7 @@ class Api(CacheObject):
     def _queryRequest(self, endpoint, queryString, params={}):
         return endpoint + queryString
     
-    def _rawToResult(self, data, queryString):
+    def _rawToResult(self, data, queryString, shallow=False):
         return ApiResult(data, queryString)
 
 class ApiResult(Element):
@@ -36,6 +37,11 @@ class ApiResult(Element):
                 soupElement = self._soup.relation
         super().__init__(soup=soupElement)
         self._queryString = queryString
+    
+    def _unshallow(self):
+        api = SingletonApi()
+        x = api.query(self.type() + '/' + str(self.id()))
+        self.__init__(x._xml, x._queryString)
     
     def isValid(self):
         return self._isValid

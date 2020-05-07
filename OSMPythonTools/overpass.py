@@ -97,6 +97,8 @@ class OverpassResult:
     
     def isValid(self):
         remark = self.remark()
+        if remark and remark.find('timed out'):
+            print('Exception: [overpass] ' + remark)
         return remark.find('error') < 0 if remark else True
     
     def toJSON(self):

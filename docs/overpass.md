@@ -40,7 +40,7 @@ The resulting query accordingly lists all nodes and ways in the area of London, 
 
 In addition to the aforenamed parameters, a starting date (`since`) and potentially an ending data (`to`) can be provided.  To restrict the query further, a user who created or edited the data can be provided by the username (`user`) or the user id (`userid`).  Both the parameter `user` and the parameter `userid` accept either one value or a list.  As an example, a query can be generated like follows:
 ```python
-query = overpassQueryBuilder(area=heidelberg.areaId(), elementType='node', since='2017-01-01T00:00:00Z', to='2017-02-01T00:00:00Z', user='franz-benjamin', out='meta')
+query = overpassQueryBuilder(area=nominatim.query('Heidelberg').areaId(), elementType='node', since='2017-01-01T00:00:00Z', to='2017-02-01T00:00:00Z', user='franz-benjamin', out='meta')
 ```
 
 We can now query an Overpass endpoint:

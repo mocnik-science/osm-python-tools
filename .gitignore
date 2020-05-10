@@ -6,3 +6,4 @@ __pycache__
 /OSMPythonTools/__info__.py
 /OSMPythonTools/**/*.pyc
 /OSMPythonTools.egg-info
+.coverage

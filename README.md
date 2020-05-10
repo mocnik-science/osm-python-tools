@@ -170,6 +170,14 @@ The following modules are available (please click on their names to access furth
 * [OSMPythonTools.**Nominatim**](docs/nominatim.md) - Access to Nominatim, a reverse geocoder
 * [OSMPythonTools.**Overpass**](docs/overpass.md) - Access to the Overpass API
 
+## Tests
+
+You can test the package by running
+```bash
+pytest --verbose
+```
+Please note that the tests might run very long (several minutes) because the overpass server will most likely defer the downloads.
+
 ## Author
 
 This application is written and maintained by Franz-Benjamin Mocnik, <mail@mocnik-science.net>.

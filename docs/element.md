@@ -19,9 +19,9 @@ busStop.id()
 busStop.type()
 # 'node'
 busStop.lat()
-# 40.701424
+# 40.7014417
 busStop.lon()
-# -73.943064
+# -73.9430797
 ```
 
 ## Accessing tags

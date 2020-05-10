@@ -19,6 +19,8 @@ setup(
         'matplotlib',
         'numpy',
         'pandas',
+        'pytest',
+        'pytest-sugar',
         'ujson',
         'xarray',
     ],

@@ -102,7 +102,7 @@ overpass = Overpass()
 query = overpassQueryBuilder(area=areaId, elementType=['way', 'relation'], selector='"natural"="water"', includeGeometry=True)
 result = overpass.query(query)
 ```
-Next, we can exemplarily choose one random waterbody (the first one of the download ones) and compute its geomtry like follows:
+Next, we can exemplarily choose one random waterbody (the first one of the download ones) and compute its geometry like follows:
 ```python
 firstElement = result.elements()[0]
 firstElement.geometry()

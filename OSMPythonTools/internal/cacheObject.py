@@ -1,10 +1,14 @@
 import hashlib
+import logging
 import ujson
 import os
 import time
 import urllib.request
 
 import OSMPythonTools
+
+LOG = logging.getLogger(__name__).addHandler(logging.NullHandler())
+
 
 class CacheObject:
     def __init__(self, prefix, endpoint, cacheDir='cache', waitBetweenQueries=None, jsonResult=True):
@@ -14,7 +18,7 @@ class CacheObject:
         self.__waitBetweenQueries = waitBetweenQueries
         self.__lastQuery = None
         self.__jsonResult = jsonResult
-    
+
     def query(self, *args, onlyCached=False, shallow=False, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
         filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
@@ -24,12 +28,12 @@ class CacheObject:
             with open(filename, 'r') as file:
                 data = ujson.load(file)
         elif onlyCached:
-            print('[' + self._prefix + '] data not cached: ' + queryString)
+            LOG.debug('[' + self._prefix + '] data not cached: ' + queryString)
             return None
         elif shallow:
             data = shallow
         else:
-            print('[' + self._prefix + '] downloading data: ' + queryString)
+            LOG.debug('[' + self._prefix + '] downloading data: ' + queryString)
             if self._waitForReady() == None:
                 if self.__lastQuery and self.__waitBetweenQueries and time.time() - self.__lastQuery < self.__waitBetweenQueries:
                     time.sleep(self.__waitBetweenQueries - time.time() + self.__lastQuery)
@@ -41,37 +45,37 @@ class CacheObject:
         if not self._isValid(result):
             raise(Exception('[' + self._prefix + '] error in result (' + filename + '): ' + queryString))
         return result
-    
+
     def deleteQueryFromCache(self, *args, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
         filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
         if os.path.exists(filename):
-            print('[' + self._prefix + '] removing cached data: ' + queryString)
+            LOG.debug('[' + self._prefix + '] removing cached data: ' + queryString)
             os.remove(filename)
-    
+
     def _queryString(self, *args, **kwargs):
         raise(NotImplementedError('Subclass should implement _queryString'))
-    
+
     def _queryRequest(self, endpoint, queryString, params={}):
         raise(NotImplementedError('Subclass should implement _queryRequest'))
-    
+
     def _rawToResult(self, data, shallow=False):
         raise(NotImplementedError('Subclass should implement _rawToResult'))
-    
+
     def _isValid(self, result):
         return True
-    
+
     def _waitForReady(self):
         return None
-    
+
     def _userAgent(self):
         return '%s/%s (%s)' % (OSMPythonTools.pkgName, OSMPythonTools.pkgVersion, OSMPythonTools.pkgUrl)
-    
+
     def __hash(self, x):
         h = hashlib.sha1()
         h.update(x.encode('utf-8'))
         return h.hexdigest()
-    
+
     def __query(self, requestString, params):
         request = self._queryRequest(self._endpoint, requestString, params=params)
         if not isinstance(request, urllib.request.Request):

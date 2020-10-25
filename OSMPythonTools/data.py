@@ -1,11 +1,15 @@
 from collections import OrderedDict
 import datetime as dt
 import itertools
+import logging
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import sys
 import xarray as xr
+
+LOG = logging.getLogger(__name__).addHandler(logging.NullHandler())
+
 
 def _raiseException(prefix, msg):
     sys.tracebacklimit = None
@@ -57,22 +61,22 @@ class Data:
         elif isinstance(arg1, Data) and isinstance(arg2, list) and all(isinstance(df, Data) for df in arg2):
             self._dimensions = arg1._dimensions
             self._dataset = xr.merge(map(lambda d: d.getDataset(), arg2))
-    
+
     def __repr__(self):
         return '\n' + self.getDataFrame().to_string() + '\n'
-    
+
     def _raiseException(self, msg):
         _raiseException('Data', msg)
-    
+
     def __freeDimensions(self, **kwargs):
         return [k for k in self._dimensions.keys() if k not in kwargs.keys() or type(kwargs[k]) is list]
-    
+
     def __freeDimensionsWithRange(self, **kwargs):
         return dict([(k, v) for k, v in kwargs.items() if type(v) is list])
-    
+
     def __fixedDimensions(self, **kwargs):
         return dict([(k, v) for k, v in kwargs.items() if type(v) is not list])
-    
+
     def getDataFrame(self, valueName='value'):
         if self._dataFrame is not None:
             return self._dataFrame
@@ -80,7 +84,7 @@ class Data:
             self._dataFrame = self._dataset.to_dataframe()
             self._dataset = None
             return self._dataFrame
-    
+
     def getDataset(self):
         if self._dataset is not None:
             return self._dataset
@@ -88,10 +92,10 @@ class Data:
             self._dataset = self._dataFrame.to_xarray()
             self._dataFrame = None
             return self._dataset
-    
+
     def getDict(self, **kwargs):
         return self.getDataFrame(**kwargs).to_dict()
-    
+
     def select(self, *args, **kwargs):
         if len(args) == 0 and len(kwargs) == 0:
             return self
@@ -104,7 +108,7 @@ class Data:
                 self._raiseException('If more than one selection is used, each of them has to contain a free dimension.')
             return Data(self, sel)
         self._raiseException('Use either only keyword arguments, or dictionaries as parameter.')
-    
+
     def __select(self, valueName=None, **kwargs):
         # select all
         allVariables = [k for k, v in kwargs.items() if v is ALL]
@@ -139,43 +143,43 @@ class Data:
             if not valueName:
                 valueName = 'value'
             return self.__renameDataset(self.getDataset().sel(**kwargs).drop(self.__fixedDimensions(**kwargs).keys()), valueName)
-    
+
     def drop(self, **kwargs):
         d = self.getDataset().copy()
         for k, v in kwargs.items():
             d = d.drop(v if type(v) is list else [v], dim=k)
         return Data(self, d)
-    
+
     @classmethod
     def __renameDataset(cls, ds, name):
         currentName = list(ds.data_vars.keys())[0]
         return ds.rename({currentName: name})
-    
+
     def show(self):
-        print(self)
-    
+        LOG.info('%r', self)
+
     def getCSV(self):
         return self.getDataFrame().to_csv()
-    
+
     def excelClipboard(self):
         self.getDataFrame().to_clipboard()
-    
+
     def describe(self, toNumber=True, **kwargs):
         dataFrame = self.select(**kwargs).getDataFrame()
         if toNumber:
             dataFrame = dataFrame.astype(np.float64)
-        print('\n' + dataFrame.describe().to_string() + '\n')
-    
+        LOG.info('\n' + dataFrame.describe().to_string() + '\n')
+
     def showPlot(self, showPlot=True, filename=None):
         if showPlot:
             if filename:
                 plt.savefig(filename)
             else:
                 plt.show(block=False)
-    
+
     def resetColorCycle(self):
         plt.gca().set_prop_cycle(None)
-    
+
     def plot(self, *args, plotTitle=None, showPlot=True, filename=None, **kwargs):
         dataFrame = self.select(*args, **kwargs).getDataFrame()
         if dataFrame.index.nlevels > 1:
@@ -185,7 +189,7 @@ class Data:
         plt.title(plotTitle if plotTitle else kwargs)
         self.showPlot(showPlot=showPlot, filename=filename)
         return self
-    
+
     def plotBar(self, *args, plotTitle=None, showPlot=True, filename=None, **kwargs):
         dataFrame = self.select(*args, **kwargs).getDataFrame()
         if dataFrame.index.nlevels > 1:
@@ -194,7 +198,7 @@ class Data:
         plt.title(plotTitle if plotTitle else kwargs)
         self.showPlot(showPlot=showPlot, filename=filename)
         return self
-    
+
     def plotScatter(self, xName, yName, *args, plotTitle=None, showPlot=True, filename=None, **kwargs):
         dataFrame = self.select(*args, **kwargs).getDataFrame()
         ax = dataFrame.plot.scatter(x=xName, y=yName)
@@ -202,22 +206,22 @@ class Data:
         plt.title(plotTitle if plotTitle else yName + ' vs ' + xName)
         self.showPlot(showPlot=showPlot, filename=filename)
         return self
-    
+
     def apply(self, f):
         dataFrame = self.getDataFrame()
         df = dataFrame.apply(lambda x: f(dataFrame, x))
         if isinstance(df, pd.Series):
             df = df.to_frame(name='value')
         return Data(self, df)
-    
+
     def toColumn(self, *args, **kwargs):
         dataFrame = self.select(*args, **kwargs).getDataFrame()
         if dataFrame.index.nlevels > 1:
             self._raiseException('Please restrict the dataset such that only one index is left.')
         return dataFrame.squeeze()
-    
+
     def renameColumns(self, f):
         return Data(self, self.getDataFrame().rename(columns=f))
-    
+
     def selectColumns(self, *cols):
         return Data(self, self.getDataFrame()[list(cols)])

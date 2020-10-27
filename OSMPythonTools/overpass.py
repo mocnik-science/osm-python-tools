@@ -11,7 +11,7 @@ def _raiseException(prefix, msg):
     sys.tracebacklimit = None
     raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
 
-def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], since=None, to=None, userid=None, user=None, includeGeometry=False, out='body'):
+def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], conditions=None, since=None, to=None, userid=None, user=None, includeGeometry=False, out='body'):
     if not elementType:
         _raiseException('overpassQueryBuilder', 'Please provide an elementType')
     if not area and not bbox:
@@ -24,6 +24,8 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], si
         elementType = [elementType]
     if not isinstance(selector, list):
         selector = [selector]
+    if not isinstance(conditions, list):
+        conditions = [conditions]
     if userid and not isinstance(userid, list):
         userid = [userid]
     if user and not isinstance(user, list):
@@ -33,9 +35,10 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], si
     userRestriction2 = '(user:' + ','.join(map(lambda u: '"' + u + '"', user)) + ')' if user else ''
     searchArea = '(' + 'area.searchArea' + ')' if area else ''
     searchBbox = '(' + ','.join(map(str, bbox)) + ')' if bbox else ''
+    conditions = '(if: ' + ' && '.join(map(str, conditions)) + ')' if conditions else ''
     query = ('area(' + str(area) + ')->.searchArea;(') if area else '('
     for e in elementType:
-        query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + dateRestriction + userRestriction + userRestriction2 + searchArea + searchBbox + ';'
+        query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + conditions + dateRestriction + userRestriction + userRestriction2 + searchArea + searchBbox + ';'
     query += '); out ' + out + (' geom' if includeGeometry and 'geom' not in [o.strip() for o in out.split()] else '') + ';'
     return query
 

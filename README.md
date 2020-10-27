@@ -170,6 +170,15 @@ The following modules are available (please click on their names to access furth
 * [OSMPythonTools.**Nominatim**](docs/nominatim.md) - Access to Nominatim, a reverse geocoder
 * [OSMPythonTools.**Overpass**](docs/overpass.md) - Access to the Overpass API
 
+## Logging
+
+This library is a little bit more verbose than other Python libraries.  The good reason behind is that the OpenStreetMap, the Nominatim, and the Overpass servers experience a heavy load already and their resources should be used carefully.  In order to make you, the user of this library, aware of when `OSMPythonTools` accesses these servers, corresponding information is logged by default.  In case you want to suppress these messages, you have to insert the following lines *after* the import of `OSMPythonTools`:
+```python
+import logging
+logging.getLogger('OSMPythonTools').setLevel(logging.ERROR)
+```
+Please note that suppressing the messages means that you have to ensure on your own that you do not overuse the provided services and that you stick to their fair policy guidelines.
+
 ## Tests
 
 You can test the package by running

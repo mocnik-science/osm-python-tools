@@ -7,9 +7,7 @@ import pandas as pd
 import sys
 import xarray as xr
 
-def _raiseException(prefix, msg):
-    sys.tracebacklimit = None
-    raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
+import OSMPythonTools
 
 def dictRange(start, end, step=1):
     return OrderedDict([(x, x) for x in range(start, end, step)])
@@ -62,7 +60,7 @@ class Data:
         return '\n' + self.getDataFrame().to_string() + '\n'
     
     def _raiseException(self, msg):
-        _raiseException('Data', msg)
+        OSMPythonTools._raiseException('Data', msg)
     
     def __freeDimensions(self, **kwargs):
         return [k for k in self._dimensions.keys() if k not in kwargs.keys() or type(kwargs[k]) is list]

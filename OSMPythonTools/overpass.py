@@ -4,22 +4,19 @@ import time
 import urllib.parse
 import urllib.request
 
+import OSMPythonTools
 from OSMPythonTools.element import Element
 from OSMPythonTools.internal.cacheObject import CacheObject
 
-def _raiseException(prefix, msg):
-    sys.tracebacklimit = None
-    raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
-
 def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], conditions=[], since=None, to=None, userid=None, user=None, includeGeometry=False, out='body'):
     if not elementType:
-        _raiseException('overpassQueryBuilder', 'Please provide an elementType')
+        OSMPythonTools._raiseException('overpassQueryBuilder', 'Please provide an elementType')
     if not area and not bbox:
-        _raiseException('overpassQueryBuilder', 'Please provide an area or a bounding box')
+        OSMPythonTools._raiseException('overpassQueryBuilder', 'Please provide an area or a bounding box')
     if area and bbox:
-        _raiseException('overpassQueryBuilder', 'Please do not provide an area and a bounding box')
+        OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do not provide an area and a bounding box')
     if userid and user:
-        _raiseException('overpassQueryBuilder', 'Please do only provide one of the following: user id and username')
+        OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do only provide one of the following: user id and username')
     if not isinstance(elementType, list):
         elementType = [elementType]
     if not isinstance(selector, list):
@@ -80,13 +77,13 @@ class Overpass(CacheObject):
                     return True
                 if statusString[3].endswith('slots available now.'):
                     if haveWaited:
-                        print('[' + self._prefix + '] start processing')
+                        OSMPythonTools.logger.info('[' + self._prefix + '] start processing')
                     return True
                 waitTo = dt.datetime.strptime(statusString[3].split(' ')[3], '%Y-%m-%dT%H:%M:%SZ,')
                 currentTime = dt.datetime.strptime(statusString[1].split(' ')[2], '%Y-%m-%dT%H:%M:%SZ')
                 sec = min((waitTo - currentTime).total_seconds(), 10.)
                 if sec > 0:
-                    print('[' + self._prefix + '] waiting for ' + str(sec) + (' more' if haveWaited else '') + ' seconds')
+                    OSMPythonTools.logger.info('[' + self._prefix + '] waiting for ' + str(sec) + (' more' if haveWaited else '') + ' seconds')
                     time.sleep(sec)
                     haveWaited = True
         except:
@@ -101,7 +98,7 @@ class OverpassResult:
     def isValid(self):
         remark = self.remark()
         if remark and remark.find('timed out'):
-            print('Exception: [overpass] ' + remark)
+            OSMPythonTools.logger.exception('Exception: [overpass] ' + remark)
         return remark.find('error') < 0 if remark else True
     
     def toJSON(self):

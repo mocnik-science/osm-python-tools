@@ -24,12 +24,12 @@ class CacheObject:
             with open(filename, 'r') as file:
                 data = ujson.load(file)
         elif onlyCached:
-            print('[' + self._prefix + '] data not cached: ' + queryString)
+            OSMPythonTools.logger.error('[' + self._prefix + '] data not cached: ' + queryString)
             return None
         elif shallow:
             data = shallow
         else:
-            print('[' + self._prefix + '] downloading data: ' + queryString)
+            OSMPythonTools.logger.warning('[' + self._prefix + '] downloading data: ' + queryString)
             if self._waitForReady() == None:
                 if self.__lastQuery and self.__waitBetweenQueries and time.time() - self.__lastQuery < self.__waitBetweenQueries:
                     time.sleep(self.__waitBetweenQueries - time.time() + self.__lastQuery)
@@ -39,14 +39,16 @@ class CacheObject:
                 ujson.dump(data, file)
         result = self._rawToResult(data, queryString, shallow=shallow)
         if not self._isValid(result):
-            raise(Exception('[' + self._prefix + '] error in result (' + filename + '): ' + queryString))
+            msg = '[' + self._prefix + '] error in result (' + filename + '): ' + queryString
+            OSMPythonTools.logger.exception(msg)
+            raise(Exception(msg))
         return result
     
     def deleteQueryFromCache(self, *args, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
         filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
         if os.path.exists(filename):
-            print('[' + self._prefix + '] removing cached data: ' + queryString)
+            OSMPythonTools.logger.info('[' + self._prefix + '] removing cached data: ' + queryString)
             os.remove(filename)
     
     def _queryString(self, *args, **kwargs):
@@ -80,9 +82,13 @@ class CacheObject:
         try:
             response = urllib.request.urlopen(request)
         except urllib.request.HTTPError as err:
-            raise Exception('The requested data could not be downloaded. ' + str(err))
+            msg = 'The requested data could not be downloaded. ' + str(err)
+            OSMPythonTools.logger.exception(msg)
+            raise Exception(msg)
         except:
-            raise Exception('The requested data could not be downloaded.  Please check whether your internet connection is working.')
+            msg = 'The requested data could not be downloaded.  Please check whether your internet connection is working.'
+            OSMPythonTools.logger.exception(msg)
+            raise Exception(msg)
         encoding = response.info().get_content_charset('utf-8')
         r = response.read().decode(encoding)
         return ujson.loads(r) if self.__jsonResult else r

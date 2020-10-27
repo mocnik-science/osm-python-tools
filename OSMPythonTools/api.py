@@ -4,10 +4,6 @@ from OSMPythonTools.element import Element
 from OSMPythonTools.internal.cacheObject import CacheObject
 from OSMPythonTools.internal.singletonApi import SingletonApi
 
-def _raiseException(prefix, msg):
-    sys.tracebacklimit = None
-    raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
-
 class Api(CacheObject):
     def __init__(self, endpoint='http://www.openstreetmap.org/api/0.6/', **kwargs):
         super().__init__('api', endpoint, jsonResult=False, **kwargs)

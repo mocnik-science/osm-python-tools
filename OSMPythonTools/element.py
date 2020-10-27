@@ -2,14 +2,13 @@ import copy
 import geojson
 import sys
 
+import OSMPythonTools
 from OSMPythonTools.internal.singletonApi import SingletonApi
 
-def _raiseException(prefix, msg):
-    sys.tracebacklimit = None
-    raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
-
 def _extendAndRaiseException(e, msg):
-    raise(Exception(str(e) + msg))
+    msgComplete = str(e) + msg
+    OSMPythonTools.logger.exception(msgComplete)
+    raise(Exception(msgComplete))
 
 class Element:
     def __init__(self, json=None, soup=None, shallow=False):
@@ -18,7 +17,7 @@ class Element:
         self._shallow = shallow
 
     def _raiseException(self, msg):
-        _raiseException('Element', msg)
+        OSMPythonTools._raiseException('Element', msg)
 
     def __getElement(self, prop):
         if self._shallow and prop not in ['type', 'id']:

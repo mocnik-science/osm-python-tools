@@ -24,6 +24,10 @@ The variable `query` is just a string containing the query:
 ```
 'area(3600175905)->.searchArea;(node["highway"="bus_stop"](area.searchArea);); out body;'
 ```
+Conditions can be provided by using the `conditions` parameter, either as a string in case of one condition only or as a list of strings in case of several conditions:
+```python
+query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', conditions='count_tags() > 6', out='body')
+```
 Also, the geometry can be included in the download:
 ```python
 query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', out='body', includeGeometry=True)

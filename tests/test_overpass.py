@@ -29,6 +29,16 @@ def test_queryAreaID():
   x = nominatim.query('Enschede')
   assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body')
 
+def test_queryAreaIDWithCondition():
+  nominatim = Nominatim()
+  x = nominatim.query('Enschede')
+  assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', conditions='count_tags() > 6', out='body')
+
+def test_queryAreaIDWithCondition2():
+  nominatim = Nominatim()
+  x = nominatim.query('Enschede')
+  assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', conditions=['count_tags() > 3', 'count_tags() > 6'], out='body')
+
 def test_queryAreaIDTimeout():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')

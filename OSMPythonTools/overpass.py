@@ -11,7 +11,7 @@ def _raiseException(prefix, msg):
     sys.tracebacklimit = None
     raise(Exception('[OSMPythonTools.' + prefix + '] ' + msg))
 
-def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], conditions=None, since=None, to=None, userid=None, user=None, includeGeometry=False, out='body'):
+def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], conditions=[], since=None, to=None, userid=None, user=None, includeGeometry=False, out='body'):
     if not elementType:
         _raiseException('overpassQueryBuilder', 'Please provide an elementType')
     if not area and not bbox:

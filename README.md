@@ -172,7 +172,7 @@ The following modules are available (please click on their names to access furth
 
 ## Logging
 
-This library is a little bit more verbose than other Python libraries.  The good reason behind is that the OpenStreetMap, the Nominatim, and the Overpass servers experience a heavy load already and their resources should be used carefully.  In order to make you, the user of this library, aware of when `OSMPythonTools` accesses these servers, corresponding information is logged by default.  In case you want to suppress these messages, you have to insert the following lines *after* the import of `OSMPythonTools`:
+This library is a little bit more verbose than other Python libraries. The good reason behind is that the OpenStreetMap, the Nominatim, and the Overpass servers experience a heavy load already and their resources should be used carefully. In order to make you, the user of this library, aware of when `OSMPythonTools` accesses these servers, corresponding information is logged by default. In case you want to suppress these messages, you have to insert the following lines *after* the import of `OSMPythonTools`:
 ```python
 import logging
 logging.getLogger('OSMPythonTools').setLevel(logging.ERROR)

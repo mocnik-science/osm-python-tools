@@ -14,11 +14,11 @@ class Api(CacheObject):
     def _queryRequest(self, endpoint, queryString, params={}):
         return endpoint + queryString
     
-    def _rawToResult(self, data, queryString, shallow=False):
-        return ApiResult(data, queryString, shallow=shallow)
+    def _rawToResult(self, data, queryString, params, shallow=False):
+        return ApiResult(data, queryString, params, shallow=shallow)
 
 class ApiResult(Element):
-    def __init__(self, xml, queryString, shallow=False):
+    def __init__(self, xml, queryString, params, shallow=False):
         self._isValid = (xml != {} and xml is not None)
         self._xml = xml
         self._soup = None
@@ -33,11 +33,12 @@ class ApiResult(Element):
                 soupElement = self._soup.relation
         super().__init__(soup=soupElement, shallow=shallow)
         self._queryString = queryString
+        self._params = params
     
     def _unshallow(self):
         api = SingletonApi()
         x = api.query(self.type() + '/' + str(self.id()))
-        self.__init__(x._xml, x._queryString)
+        self.__init__(x._xml, x._queryString, x._params)
     
     def isValid(self):
         return self._isValid

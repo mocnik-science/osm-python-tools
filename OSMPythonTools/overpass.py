@@ -60,8 +60,8 @@ class Overpass(CacheObject):
     def _queryRequest(self, endpoint, queryString, params={}):
         return urllib.request.Request(endpoint + 'interpreter', urllib.parse.urlencode({'data': queryString}).encode('utf-8'))
     
-    def _rawToResult(self, data, queryString, shallow=False):
-        return OverpassResult(data, queryString)
+    def _rawToResult(self, data, queryString, params, shallow=False):
+        return OverpassResult(data, queryString, params)
     
     def _isValid(self, result):
         return result.isValid()
@@ -90,7 +90,7 @@ class Overpass(CacheObject):
             raise(Exception('[' + self._prefix + '] could not fetch or interpret status of the endpoint'))
 
 class OverpassResult:
-    def __init__(self, json, queryString):
+    def __init__(self, json, queryString, params):
         self._json = json
         self._elements = list(map(lambda e: Element(json=e), self.__get('elements')))
         self._queryString = queryString

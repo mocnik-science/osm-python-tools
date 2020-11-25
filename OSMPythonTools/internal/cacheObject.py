@@ -15,7 +15,7 @@ class CacheObject:
         self.__lastQuery = None
         self.__jsonResult = jsonResult
     
-    def query(self, *args, onlyCached=False, shallow=False, **kwargs):
+    def query(self, *args, onlyCached=False, shallow=False, save_cache=True, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
         filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
         if not os.path.exists(self.__cacheDir):
@@ -35,8 +35,9 @@ class CacheObject:
                     time.sleep(self.__waitBetweenQueries - time.time() + self.__lastQuery)
             self.__lastQuery = time.time()
             data = self.__query(queryString, params)
-            with open(filename, 'w') as file:
-                ujson.dump(data, file)
+            if save_cache:
+                with open(filename, 'w') as file:
+                    ujson.dump(data, file)
         result = self._rawToResult(data, queryString, params, shallow=shallow)
         if not self._isValid(result):
             msg = '[' + self._prefix + '] error in result (' + filename + '): ' + queryString

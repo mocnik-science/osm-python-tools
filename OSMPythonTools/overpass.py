@@ -17,6 +17,29 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], co
         OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do not provide an area and a bounding box')
     if userid and user:
         OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do only provide one of the following: user id and username')
+    if isinstance(area, str):
+        area = area.strip()
+        way = True if area[0] == 'w' else False
+        ### parse iD Editor id format
+        if area[1] in '0123456789':
+            if way:
+                area = int(area[1:]) + 2400000000
+            else:
+                area = int(area[1:]) + 3600000000
+        ### parse JOSM id format
+        elif len(area.split()) == 2:
+            if way:
+                area = int(area.split()[1]) + 2400000000
+            else:
+                area = int(area.split()[1]) + 3600000000
+        ### parse openstreetmap.org url id format
+        elif len(area.split('/')) == 2:
+            if way:
+                area = int(area.split('/')[1]) + 2400000000
+            else:
+                area = int(area.split('/')[1]) + 3600000000
+        else:
+            OSMPythonTools._raiseException('overpassQueryBuilder', 'Please make sure your way or relation id is formatted properly: way/000000000, way 000000000, or w000000000')
     if not isinstance(elementType, list):
         elementType = [elementType]
     if not isinstance(selector, list):

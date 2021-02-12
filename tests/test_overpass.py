@@ -72,3 +72,15 @@ def test_queryAreaIDSelector():
   nominatim = Nominatim()
   x = nominatim.query('Dublin')
   assertForQueryResult(minElements=5, area=x.areaId(), elementType=['node', 'way'], selector=['"name"~"Tesco"', 'opening_hours'])
+
+def test_queryAreaIDFormatArea():
+  q = overpassQueryBuilder(area=2771744961, elementType='node')
+  assert q == overpassQueryBuilder(area='way/371744961', elementType='node')
+  assert q == overpassQueryBuilder(area='way 371744961', elementType='node')
+  assert q == overpassQueryBuilder(area='w371744961', elementType='node')
+
+def test_queryAreaIDFormatRelation():
+  q = overpassQueryBuilder(area=3600415473, elementType='node')
+  assert q == overpassQueryBuilder(area='relation/415473', elementType='node')
+  assert q == overpassQueryBuilder(area='relation 415473', elementType='node')
+  assert q == overpassQueryBuilder(area='r415473', elementType='node')

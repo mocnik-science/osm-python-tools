@@ -218,9 +218,13 @@ class Element:
             polygon = [r]
             ringsInnerTodo = []
             for r2 in ringsInner:
-                if self.__geometry_pointInsidePolygon(r2[0], r):
-                    polygon.append(r2)
-                else:
+                isInside = False
+                for p in r2:
+                    if self.__geometry_pointInsidePolygon(p, r):
+                        polygon.append(r2)
+                        isInside = True
+                        break
+                if not isInside:
                     ringsInnerTodo.append(r2)
             ringsInner = ringsInnerTodo
             polygons.append(polygon)

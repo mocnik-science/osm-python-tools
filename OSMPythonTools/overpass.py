@@ -20,26 +20,26 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], co
     if isinstance(area, str):
         area = area.strip()
         way = True if area[0] == 'w' else False
-        ### parse iD Editor id format
-        if area[1] in '0123456789':
+        # parse: 'way/*' and 'relation/*'
+        if len(area.split('/')) == 2:
             if way:
-                area = int(area[1:]) + 2400000000
+                area = int(area.split('/')[1]) + 2400000000
             else:
-                area = int(area[1:]) + 3600000000
-        ### parse JOSM id format
+                area = int(area.split('/')[1]) + 3600000000
+        # parse: 'way *' and 'relation *'
         elif len(area.split()) == 2:
             if way:
                 area = int(area.split()[1]) + 2400000000
             else:
                 area = int(area.split()[1]) + 3600000000
-        ### parse openstreetmap.org url id format
-        elif len(area.split('/')) == 2:
+        # parse: 'w*' and 'r*'
+        elif area[1] in '0123456789':
             if way:
-                area = int(area.split('/')[1]) + 2400000000
+                area = int(area[1:]) + 2400000000
             else:
-                area = int(area.split('/')[1]) + 3600000000
+                area = int(area[1:]) + 3600000000
         else:
-            OSMPythonTools._raiseException('overpassQueryBuilder', 'Please make sure your way or relation id is formatted properly: way/000000000, way 000000000, or w000000000')
+            OSMPythonTools._raiseException('overpassQueryBuilder', 'Please make sure that your way or relation id is formatted properly: \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
     if not isinstance(elementType, list):
         elementType = [elementType]
     if not isinstance(selector, list):

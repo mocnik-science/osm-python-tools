@@ -16,7 +16,7 @@ Overpass queries are simple enough to be written by hand, but we will demonstrat
 from OSMPythonTools.overpass import overpassQueryBuilder
 query = overpassQueryBuilder(area=nyc.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body')
 ```
-Instead of an area, one can also use a bounding box:
+The area id can be provided in different formats, either as a number (possibly incremented by 2400000000 or 3600000000 like described in the Overpass API documentation), or like 'way/\*\*\*', 'way \*\*\*', 'w\*\*\*', or 'relation/\*\*\*', 'relation \*\*\*', or 'r\*\*\*'.  Instead of an area, one can also use a bounding box:
 ```python
 query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', out='body')
 ```

@@ -64,8 +64,12 @@ class NominatimResult:
 
     def areaId(self):
         for d in self._json:
-            if 'osm_type' in d and d['osm_type'] == 'relation' and 'osm_id' in d:
-                return 3600000000 + int(d['osm_id'])
+            if 'osm_type' in d and 'osm_id' in d:
+                id_as_int = int(d['osm_id'])
+                if d['osm_type'] == 'relation':
+                    return 3600000000 + id_as_int
+                elif d['osm_type'] == 'way':
+                    return 2400000000 + id_as_int
         return None
 
     def wkt(self):

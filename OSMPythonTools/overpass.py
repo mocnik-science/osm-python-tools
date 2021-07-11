@@ -9,7 +9,7 @@ import OSMPythonTools
 from OSMPythonTools.element import Element
 from OSMPythonTools.internal.cacheObject import CacheObject
 
-def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], conditions=[], since=None, to=None, userid=None, user=None, includeGeometry=False, out='body'):
+def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], conditions=[], since=None, to=None, userid=None, user=None, includeGeometry=False, includeCenter=False, out='body'):
     if not elementType:
         OSMPythonTools._raiseException('overpassQueryBuilder', 'Please provide an elementType')
     if not area and not bbox:
@@ -44,7 +44,12 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], co
     query = ('area(' + str(areaId) + ')->.searchArea;(') if areaId else '('
     for e in elementType:
         query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + conditions + dateRestriction + userRestriction + userRestriction2 + searchArea + searchBbox + ';'
-    query += '); out ' + out + (' geom' if includeGeometry and 'geom' not in [o.strip() for o in out.split()] else '') + ';'
+    if isinstance(out, str):
+        out = [out]
+    if includeCenter:
+        out.insert(0, 'center')
+    out = '; '.join(map(lambda o: 'out ' + o, out))
+    query += '); ' + out + (' geom' if includeGeometry and 'geom' not in [o.strip() for o in out.split()] else '') + ';'
     return query
 
 class Overpass(CacheObject):

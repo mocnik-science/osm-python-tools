@@ -34,9 +34,14 @@ Conditions can be provided by using the `conditions` parameter, either as a stri
 ```python
 query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', conditions='count_tags() > 6', out='body')
 ```
-Also, the geometry can be included in the download:
+Also, the geometry and the center of ways or relations can be included in the download:
 ```python
 query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', out='body', includeGeometry=True)
+query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', out='body', includeCenter=True)
+```
+Even several output methods encoded in the parameter `out` can be provided manually.  The last query, for instance, is identical to:
+```python
+query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', out=['center', 'body'])
 ```
 
 If not only one `elementType` or `selector` shall be queried for, also lists can be provided for both parameters:

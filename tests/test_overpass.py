@@ -60,6 +60,20 @@ def test_queryAreaIDGeometry():
   assert abs(y.nodes()[0].lat() - 52.2) < .5
   assert abs(y.nodes()[0].lon() - 6.8) < .5
 
+def test_queryAreaIDCenter():
+  nominatim = Nominatim()
+  x = nominatim.query('Zandvoort')
+  y = assertForQueryResult(area=x, elementType='way', selector='"highway"', includeCenter=True)
+  assert abs(y.ways()[0].centerLat() - 52.4) < .5
+  assert abs(y.ways()[0].centerLon() - 4.6) < .5
+
+def test_queryAreaIDOut():
+  nominatim = Nominatim()
+  x = nominatim.query('Zandvoort')
+  y = assertForQueryResult(area=x, elementType='way', selector='"highway"', out=['center', 'body'])
+  assert abs(y.ways()[0].centerLat() - 52.4) < .5
+  assert abs(y.ways()[0].centerLon() - 4.6) < .5
+
 def test_queryBboxGeometry():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')

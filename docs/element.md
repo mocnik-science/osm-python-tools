@@ -88,6 +88,20 @@ result.elements()[0].geometry()
 ```
 Some relations contain invalid geometries.  If this is the case, an exception is returned.
 
+In order to receive the center of a way or relation, the argument `includeCenter=True` needs to be provided to the `overpass QueryBuilder`:
+```python
+zandvoort = nominatim.query('Zandvoort')
+query = overpassQueryBuilder(area=zandvoort, elementType='way', selector='"highway"', includeCenter=True)
+result = overpass.query(query)
+```
+Then, the center can be obtained as follows:
+```python
+result.elements()[0].centerLat()
+# 52.3657055
+result.elements()[0].centerLon()
+# 4.5598827
+```
+
 ## Accessing the history and data about the creation
 
 If explicitly queried, the resulting elements contain information about the history.  As an example, one can query for the changes made by the user `franz-benjamin` in `Heidelberg` in March 2017:

@@ -83,6 +83,10 @@ class Element(ElementShallow):
         return float(self.__getElement('lon')) if self.__getElement('lon') else None
     def geometry(self):
         return self.geometry()
+    def centerLat(self):
+        return float(self.__getElement('center')['lat']) if self.__getElement('center') else None
+    def centerLon(self):
+        return float(self.__getElement('center')['lon']) if self.__getElement('center') else None
 
     ### nodes
     def __nodes(self):

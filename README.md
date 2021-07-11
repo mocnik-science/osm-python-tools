@@ -193,6 +193,6 @@ Please note that the tests might run very long (several minutes) because the ove
 
 This application is written and maintained by Franz-Benjamin Mocnik, <mail@mocnik-science.net>.
 
-(c) by Franz-Benjamin Mocnik, 2017-2020.
+(c) by Franz-Benjamin Mocnik, 2017-2021.
 
 The code is licensed under the [GPL-3](https://github.com/mocnik-science/osm-python-tools/blob/master/LICENSE).

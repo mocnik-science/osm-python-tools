@@ -85,11 +85,11 @@ class CacheObject:
         except urllib.request.HTTPError as err:
             msg = 'The requested data could not be downloaded. ' + str(err)
             OSMPythonTools.logger.exception(msg)
-            raise Exception(msg)
-        except:
+            raise Exception(msg, err)
+        except Exception as err:
             msg = 'The requested data could not be downloaded.  Please check whether your internet connection is working.'
             OSMPythonTools.logger.exception(msg)
-            raise Exception(msg)
+            raise Exception(msg, err)
         encoding = response.info().get_content_charset('utf-8')
         r = response.read().decode(encoding)
         return ujson.loads(r) if self.__jsonResult else r

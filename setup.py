@@ -1,4 +1,4 @@
-from setuptools import setup
+import setuptools
 
 pkgName='OSMPythonTools'
 pkgVersion='0.3.0'
@@ -9,7 +9,7 @@ with open('./OSMPythonTools/__info__.py', 'w') as f:
     f.write('pkgVersion = \'%s\'\n' % pkgVersion)
     f.write('pkgUrl = \'%s\'\n' % pkgUrl)
 
-setup(
+setuptools.setup(
     name=pkgName,
     packages=setuptools.find_packages(),
     install_requires=[

@@ -8,7 +8,7 @@ class Nominatim(CacheObject):
 
     def _queryString(self, *args, wkt=False, reverse=False, zoom=None, **kwargs):
         if reverse:
-            query='reverse'
+            query = 'reverse'
             [lat, lon] = args
             params = kwargs['params'] if 'params' in kwargs else {}
             params['lat'] = lat
@@ -18,7 +18,7 @@ class Nominatim(CacheObject):
             if wkt:
                 params['polygon_text'] = '1'
         else:
-            query='search'
+            query = 'search'
             [q] = args
             params = kwargs['params'] if 'params' in kwargs else {}
             params['q'] = q

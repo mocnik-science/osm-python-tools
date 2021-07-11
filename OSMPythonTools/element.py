@@ -1,6 +1,5 @@
 import copy
 import geojson
-import sys
 
 import OSMPythonTools
 from OSMPythonTools.internal.singletonApi import SingletonApi

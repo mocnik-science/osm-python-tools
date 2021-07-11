@@ -1,7 +1,7 @@
 import setuptools
 
 pkgName='OSMPythonTools'
-pkgVersion='0.3.0'
+pkgVersion='0.3.1'
 pkgUrl='https://github.com/mocnik-science/osm-python-tools'
 
 with open('./OSMPythonTools/__info__.py', 'w') as f:

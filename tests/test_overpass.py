@@ -26,27 +26,27 @@ def assertForQueryResult(minElements=100, overpassKwargs={}, **kwargs):
 def test_queryAreaID():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')
-  assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body')
+  assertForQueryResult(area=x, elementType='node', selector='"highway"="bus_stop"', out='body')
 
 def test_queryAreaIDWithCondition():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')
-  assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', conditions='count_tags() > 1', out='body')
+  assertForQueryResult(area=x, elementType='node', selector='"highway"="bus_stop"', conditions='count_tags() > 1', out='body')
 
 def test_queryAreaIDWithCondition2():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')
-  assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', conditions=['count_tags() > 2', 'count_tags() > 1'], out='body')
+  assertForQueryResult(area=x, elementType='node', selector='"highway"="bus_stop"', conditions=['count_tags() > 2', 'count_tags() > 1'], out='body')
 
 def test_queryAreaIDTimeout():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')
-  assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body', overpassKwargs={'timeout': 25})
+  assertForQueryResult(area=x, elementType='node', selector='"highway"="bus_stop"', out='body', overpassKwargs={'timeout': 25})
 
 def test_queryAreaIDTimeout():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')
-  assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body', overpassKwargs={'date': '2017-01-01T00:00:00Z'})
+  assertForQueryResult(area=x, elementType='node', selector='"highway"="bus_stop"', out='body', overpassKwargs={'date': '2017-01-01T00:00:00Z'})
 
 def test_queryBbox():
   nominatim = Nominatim()
@@ -56,21 +56,21 @@ def test_queryBbox():
 def test_queryAreaIDGeometry():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')
-  y = assertForQueryResult(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body', includeGeometry=True)
-  assert (y.nodes()[0].lat() - 52.2) < .5
-  assert (y.nodes()[0].lon() - 6.8) < .5
+  y = assertForQueryResult(area=x, elementType='node', selector='"highway"="bus_stop"', includeGeometry=True)
+  assert abs(y.nodes()[0].lat() - 52.2) < .5
+  assert abs(y.nodes()[0].lon() - 6.8) < .5
 
 def test_queryBboxGeometry():
   nominatim = Nominatim()
   x = nominatim.query('Enschede')
   y = assertForQueryResult(bbox=[52.1, 6.7, 52.3, 6.9], elementType='node', selector='"highway"="bus_stop"', out='body')
-  assert (y.nodes()[0].lat() - 52.2) < .5
-  assert (y.nodes()[0].lon() - 6.8) < .5
+  assert abs(y.nodes()[0].lat() - 52.2) < .5
+  assert abs(y.nodes()[0].lon() - 6.8) < .5
 
 def test_queryAreaIDSelector():
   nominatim = Nominatim()
   x = nominatim.query('Dublin')
-  assertForQueryResult(minElements=5, area=x.areaId(), elementType=['node', 'way'], selector=['"name"~"Tesco"', 'opening_hours'])
+  assertForQueryResult(minElements=5, area=x, elementType=['node', 'way'], selector=['"name"~"Tesco"', 'opening_hours'])
 
 def test_queryAreaIDFormatArea():
   q = overpassQueryBuilder(area=2771744961, elementType='node')

@@ -2,7 +2,6 @@ from OSMPythonTools.nominatim import Nominatim
 from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
 
 def assertForQueryResult(minElements=100, overpassKwargs={}, **kwargs):
-  print(kwargs)
   overpass = Overpass()
   y = overpass.query(overpassQueryBuilder(**kwargs), **overpassKwargs)
   assert y.isValid()
@@ -84,3 +83,14 @@ def test_queryAreaIDFormatRelation():
   assert q == overpassQueryBuilder(area='relation/415473', elementType='node')
   assert q == overpassQueryBuilder(area='relation 415473', elementType='node')
   assert q == overpassQueryBuilder(area='r415473', elementType='node')
+
+def test_differentAreaFormats():
+  nominatim = Nominatim()
+  overpass = Overpass()
+  x = nominatim.query('Enschede')
+  rs = []
+  rs.append(overpass.query(overpassQueryBuilder(area=x, elementType='node', selector='"highway"="bus_stop"', out='body')))
+  rs.append(overpass.query(overpassQueryBuilder(area=x.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body')))
+  rs.append(overpass.query(overpassQueryBuilder(area=x.typeId(), elementType='node', selector='"highway"="bus_stop"', out='body')))
+  for r in rs:
+    assert rs[0].countElements() == r.countElements()

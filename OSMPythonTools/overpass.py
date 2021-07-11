@@ -17,7 +17,7 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], co
     if area and bbox:
         OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do not provide an area and a bounding box')
     if userid and user:
-        OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do only provide one of the following: user id and username')
+        OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do only provide one of the following: user ID and username')
     if isinstance(area, str) or isinstance(area, Element) or isinstance(area, NominatimResult):
         area = Element.fromId(area)
         areaId = area.areaId()

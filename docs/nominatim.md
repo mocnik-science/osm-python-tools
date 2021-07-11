@@ -15,12 +15,12 @@ As can be checked by the (full) place name, the place has been identified correc
 heidelberg.displayName()
 # Heidelberg, Baden-Württemberg, Deutschland
 ```
-The result of this query is an object, which contains a number of methods to access the data. Most important, the area id can be accessed:
+The result of this query is an object, which contains a number of methods to access the data. Most important, the area ID can be accessed:
 ```python
 heidelberg.areaId()
 # 3600285864
 ```
-This raw data provided by Nominatim potentially contains more than one geometry. The function `areaId` only returns the area id of the first geometry. The (complete) raw data of the answer by Nominatim can be accessed:
+This raw data provided by Nominatim potentially contains more than one geometry. The function `areaId` only returns the area ID of the first geometry. The (complete) raw data of the answer by Nominatim can be accessed:
 ```python
 heidelberg.toJSON()
 # [{'place_id': '580259', 'licence': 'Data © OpenStreetMap ...

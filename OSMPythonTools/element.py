@@ -24,7 +24,7 @@ class Element(ElementShallow):
         if isinstance(idToParse, ElementShallow):
             idToParse = idToParse.typeId()
         if idToParse is None:
-            Element._raiseException(None, 'Could not parse element. Please make sure that your node, way, or relation Id is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
+            Element._raiseException(None, 'Could not parse element. Please make sure that your node, way, or relation ID is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
         idToParse = idToParse.strip().lower()
         type = None
         if idToParse[0] == 'n':
@@ -34,12 +34,12 @@ class Element(ElementShallow):
         elif idToParse[0] == 'r':
             type = 'relation'
         else:
-            Element._raiseException(None, 'Could not parse element type. Please make sure that your node, way, or relation Id is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
+            Element._raiseException(None, 'Could not parse element type. Please make sure that your node, way, or relation ID is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
         idToParse = re.sub('[^0-9]', '', idToParse)
         if len(idToParse) > 0:
             id = int(idToParse)
         else:
-            Element._raiseException(None, 'Could not parse element Id. Please make sure that your node, way, or relation Id is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
+            Element._raiseException(None, 'Could not parse element ID. Please make sure that your node, way, or relation ID is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
         return Element(json={'type': type, 'id': id}, shallow=True)
 
     def _raiseException(self, msg):

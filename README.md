@@ -15,7 +15,7 @@ pip3 install OSMPythonTools
 
 ## Example 1
 
-*Which object does the way with the id `5887599` represent?*
+*Which object does the way with the ID `5887599` represent?*
 
 We can use the OSM API to answer this question:
 ```python
@@ -63,13 +63,13 @@ stephansdom.tag('denomination')
 
 *How many trees are in the OSM data of Vienna? And how many trees have there been in 2013?*
 
-This time, we have to first resolve the name ‘Vienna’ to an area id:
+This time, we have to first resolve the name ‘Vienna’ to an area ID:
 ```python
 from OSMPythonTools.nominatim import Nominatim
 nominatim = Nominatim()
 areaId = nominatim.query('Vienna, Austria').areaId()
 ```
-This area id can now be used to build the corresponding query:
+This area ID can now be used to build the corresponding query:
 ```python
 from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
 overpass = Overpass()

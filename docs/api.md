@@ -4,7 +4,7 @@
 
 The [OSM API](http://wiki.openstreetmap.org/wiki/API) provides access to many kind of information in the OSM database. Currently, this module only supports the requests `node`, `way`, and `relation`.
 
-We can access information about a node with the id `42467507` as follows:
+We can access information about a node with the ID `42467507` as follows:
 ```python
 from OSMPythonTools.api import Api
 api = Api()

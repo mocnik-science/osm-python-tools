@@ -4,7 +4,7 @@
 
 ## Performing queries
 
-OSM data can be accessed using the [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API). While the Overpass API is powerful, it cannot automatically reverse geocode place names. We thus use Nominatim again to query the area id of, for example, NYC:
+OSM data can be accessed using the [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API). While the Overpass API is powerful, it cannot automatically reverse geocode place names. We thus use Nominatim again to query the area ID of, for example, NYC:
 ```python
 from OSMPythonTools.nominatim import Nominatim
 nominatim = Nominatim()
@@ -16,7 +16,7 @@ Overpass queries are simple enough to be written by hand, but we will demonstrat
 from OSMPythonTools.overpass import overpassQueryBuilder
 query = overpassQueryBuilder(area=nyc, elementType='node', selector='"highway"="bus_stop"', out='body')
 ```
-The area id can be provided in different formats, either in one of the standard formats explained in the [general remarks](general-remarks.md), or as a number (possibly incremented by 2400000000 or 3600000000 like described in the Overpass API documentation).  As an alternative to the above query, the following queries would, for instance, provide the same results:
+The area ID can be provided in different formats, either in one of the standard formats explained in the [general remarks](general-remarks.md), or as a number (possibly incremented by 2400000000 or 3600000000 like described in the Overpass API documentation).  As an alternative to the above query, the following queries would, for instance, provide the same results:
 ```python
 query = overpassQueryBuilder(area=nyc.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body')
 query = overpassQueryBuilder(area='relation/175905', elementType='node', selector='"highway"="bus_stop"', out='body')
@@ -48,7 +48,7 @@ The resulting query accordingly lists all nodes and ways in the area of London, 
 'area(3600065606)->.searchArea;(node["name"~"Tesco"][opening_hours](area.searchArea);way["name"~"Tesco"][opening_hours](area.searchArea);); out body;'
 ```
 
-In addition to the aforenamed parameters, a starting date (`since`) and potentially an ending data (`to`) can be provided.  To restrict the query further, a user who created or edited the data can be provided by the username (`user`) or the user id (`userid`).  Both the parameter `user` and the parameter `userid` accept either one value or a list.  As an example, a query can be generated like follows:
+In addition to the aforenamed parameters, a starting date (`since`) and potentially an ending data (`to`) can be provided.  To restrict the query further, a user who created or edited the data can be provided by the username (`user`) or the user ID (`userid`).  Both the parameter `user` and the parameter `userid` accept either one value or a list.  As an example, a query can be generated like follows:
 ```python
 query = overpassQueryBuilder(area=nominatim.query('Heidelberg'), elementType='node', since='2017-01-01T00:00:00Z', to='2017-02-01T00:00:00Z', user='franz-benjamin', out='meta')
 ```

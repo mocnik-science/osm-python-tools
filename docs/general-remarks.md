@@ -4,9 +4,9 @@
 
 Here, we make some general remarks that are of more generic character. They do not refer to a single module but rather to the entire library.
 
-## OSM Id formats
+## OSM ID formats
 
-OSM Ids can be provided an different places, such as when using the `overpassQueryBuilder` to create a query related to a certain area.  In these cases, the following input can be provided:
+OSM IDs can be provided an different places, such as when using the `overpassQueryBuilder` to create a query related to a certain area.  In these cases, the following input can be provided:
 * A string formatted as `'node/*'`, `'way/*'`, or `'relation/*'`
 * A string formatted as `'node *'`, `'way *'`, or `'relation *'`
 * A string formatted as `'node*'`, `'way*'`, or `'relation*'`

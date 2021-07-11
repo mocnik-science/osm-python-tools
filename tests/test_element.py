@@ -6,6 +6,7 @@ from OSMPythonTools.nominatim import NominatimResult
 @pytest.mark.parametrize(('type', 'id'), [('node', 42467507), ('way', 731168237), ('relation', 175905)])
 def test_elementCreate(type, id):
   ns = []
+  # lower
   ns.append(Element.fromId(type + '/' + str(id)))
   ns.append(Element.fromId(type + ' / ' + str(id)))
   ns.append(Element.fromId(type[0] + '/' + str(id)))
@@ -15,8 +16,20 @@ def test_elementCreate(type, id):
   ns.append(Element.fromId(type + str(id)))
   ns.append(Element.fromId(type[0] + ' ' + str(id)))
   ns.append(Element.fromId(type[0] + str(id)))
+  # upper
+  type = type.upper()
+  ns.append(Element.fromId(type + '/' + str(id)))
+  ns.append(Element.fromId(type + ' / ' + str(id)))
+  ns.append(Element.fromId(type[0] + '/' + str(id)))
+  ns.append(Element.fromId(type[0] + ' / ' + str(id)))
+  ns.append(Element.fromId(type + '  ' + str(id)))
+  ns.append(Element.fromId(type + ' ' + str(id)))
+  ns.append(Element.fromId(type + str(id)))
+  ns.append(Element.fromId(type[0] + ' ' + str(id)))
+  ns.append(Element.fromId(type[0] + str(id)))
+  # objects
   ns.append(Element.fromId(ns[0]))
-  ns.append(Element.fromId(NominatimResult([{'osm_type': type, 'osm_id': id}], '', None)))
+  ns.append(Element.fromId(NominatimResult([{'osm_type': type.lower(), 'osm_id': id}], '', None)))
   for n in ns:
     assert ns[0].type() == n.type()
     assert ns[0].id() == n.id()

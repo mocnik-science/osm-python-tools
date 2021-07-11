@@ -27,11 +27,11 @@ class Element(ElementShallow):
             Element._raiseException(None, 'Could not parse element. Please make sure that your node, way, or relation ID is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
         idToParse = idToParse.strip().lower()
         type = None
-        if idToParse[0] == 'n':
+        if idToParse[0].lower() == 'n':
             type = 'node'
-        elif idToParse[0] == 'w':
+        elif idToParse[0].lower() == 'w':
             type = 'way'
-        elif idToParse[0] == 'r':
+        elif idToParse[0].lower() == 'r':
             type = 'relation'
         else:
             Element._raiseException(None, 'Could not parse element type. Please make sure that your node, way, or relation ID is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')

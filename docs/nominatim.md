@@ -44,7 +44,7 @@ heidelberg = nominatim.query(49.4093582, 8.694724, reverse=True, zoom=10)
 ```
 The fact that the entity is the result of a reverse geocoding process can be checked as follows:
 ```python
-heidelberg.reverse()
+heidelberg.isReverse()
 # True
 ```
 Besides the usual attributes, the result of a geocoding process also provides the address information in a more structured way by the method `address`:

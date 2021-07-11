@@ -1,6 +1,6 @@
 [back to readme](../../../)
 
-# General comments
+# General remarks
 
 Here, we make some general remarks that are of more generic character. They do not refer to a single module but rather to the entire library.
 

@@ -170,7 +170,7 @@ The following modules are available (please click on their names to access furth
 * [OSMPythonTools.**Nominatim**](docs/nominatim.md) - Access to Nominatim, a reverse geocoder
 * [OSMPythonTools.**Overpass**](docs/overpass.md) - Access to the Overpass API
 
-Please refer to the [general comments](docs/general-comments.md) page if you have further questions related to `OSMPythonTools` in general or functionality that the several modules have in common.
+Please refer to the [general remarks](docs/general-remarks.md) page if you have further questions related to `OSMPythonTools` in general or functionality that the several modules have in common.
 
 ## Logging
 

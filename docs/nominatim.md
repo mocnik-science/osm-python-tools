@@ -95,3 +95,5 @@ In case of numerous requests, one may want to delay the requests. The fetching p
 nominatim = Nominatim(waitBetweenQueries=2)
 ```
 Also combinations of `endpoint`, `cacheDir`, and `waitBetweenQueries` can be used.
+
+Further information about these parameters can be found on the [general remarks](general-remarks.md) page.

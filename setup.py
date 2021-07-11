@@ -11,7 +11,7 @@ with open('./OSMPythonTools/__info__.py', 'w') as f:
 
 setup(
     name=pkgName,
-    packages=['OSMPythonTools', 'OSMPythonTools.internal'],
+    packages=setuptools.find_packages(),
     install_requires=[
         'beautifulsoup4',
         'geojson',

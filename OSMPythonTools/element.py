@@ -1,19 +1,46 @@
 import copy
 import geojson
+import re
 
 import OSMPythonTools
 from OSMPythonTools.internal.singletonApi import SingletonApi
+from OSMPythonTools.internal.elementShallow import ElementShallow
 
 def _extendAndRaiseException(e, msg):
     msgComplete = str(e) + msg
     OSMPythonTools.logger.exception(msgComplete)
     raise(Exception(msgComplete))
 
-class Element:
+class Element(ElementShallow):
     def __init__(self, json=None, soup=None, shallow=False):
         self._json = json
         self._soup = soup
         self._shallow = shallow
+    
+    @staticmethod
+    def fromId(idToParse):
+        if isinstance(idToParse, Element):
+            return idToParse
+        if isinstance(idToParse, ElementShallow):
+            idToParse = idToParse.typeId()
+        if idToParse is None:
+            Element._raiseException(None, 'Could not parse element. Please make sure that your node, way, or relation Id is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
+        idToParse = idToParse.strip().lower()
+        type = None
+        if idToParse[0] == 'n':
+            type = 'node'
+        elif idToParse[0] == 'w':
+            type = 'way'
+        elif idToParse[0] == 'r':
+            type = 'relation'
+        else:
+            Element._raiseException(None, 'Could not parse element type. Please make sure that your node, way, or relation Id is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
+        idToParse = re.sub('[^0-9]', '', idToParse)
+        if len(idToParse) > 0:
+            id = int(idToParse)
+        else:
+            Element._raiseException(None, 'Could not parse element Id. Please make sure that your node, way, or relation Id is formatted properly: \'node/***\', \'node ***\', \'n***\', \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
+        return Element(json={'type': type, 'id': id}, shallow=True)
 
     def _raiseException(self, msg):
         OSMPythonTools._raiseException('Element', msg)

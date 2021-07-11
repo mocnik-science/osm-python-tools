@@ -14,9 +14,15 @@ nyc = nominatim.query('NYC')
 Overpass queries are simple enough to be written by hand, but we will demonstrate how to use the `overpassQueryBuilder`:
 ```python
 from OSMPythonTools.overpass import overpassQueryBuilder
-query = overpassQueryBuilder(area=nyc.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body')
+query = overpassQueryBuilder(area=nyc, elementType='node', selector='"highway"="bus_stop"', out='body')
 ```
-The area id can be provided in different formats, either as a number (possibly incremented by 2400000000 or 3600000000 like described in the Overpass API documentation), or like 'way/\*\*\*', 'way \*\*\*', 'w\*\*\*', or 'relation/\*\*\*', 'relation \*\*\*', or 'r\*\*\*'.  Instead of an area, one can also use a bounding box:
+The area id can be provided in different formats, either in one of the standard formats explained in the [general remarks](general-remarks.md), or as a number (possibly incremented by 2400000000 or 3600000000 like described in the Overpass API documentation).  As an alternative to the above query, the following queries would, for instance, provide the same results:
+```python
+query = overpassQueryBuilder(area=nyc.areaId(), elementType='node', selector='"highway"="bus_stop"', out='body')
+query = overpassQueryBuilder(area='relation/175905', elementType='node', selector='"highway"="bus_stop"', out='body')
+query = overpassQueryBuilder(area='relation 175905', elementType='node', selector='"highway"="bus_stop"', out='body')
+```
+Instead of an area, one can also use a bounding box:
 ```python
 query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', out='body')
 ```
@@ -35,7 +41,7 @@ query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', 
 
 If not only one `elementType` or `selector` shall be queried for, also lists can be provided for both parameters:
 ```python
-query = overpassQueryBuilder(area=nominatim.query('London').areaId(), elementType=['node', 'way'], selector=['"name"~"Tesco"', 'opening_hours'])
+query = overpassQueryBuilder(area=nominatim.query('London'), elementType=['node', 'way'], selector=['"name"~"Tesco"', 'opening_hours'])
 ```
 The resulting query accordingly lists all nodes and ways in the area of London, which have a key `name` with a value containing `Tesco` and a tag `opening_hours`:
 ```
@@ -44,7 +50,7 @@ The resulting query accordingly lists all nodes and ways in the area of London, 
 
 In addition to the aforenamed parameters, a starting date (`since`) and potentially an ending data (`to`) can be provided.  To restrict the query further, a user who created or edited the data can be provided by the username (`user`) or the user id (`userid`).  Both the parameter `user` and the parameter `userid` accept either one value or a list.  As an example, a query can be generated like follows:
 ```python
-query = overpassQueryBuilder(area=nominatim.query('Heidelberg').areaId(), elementType='node', since='2017-01-01T00:00:00Z', to='2017-02-01T00:00:00Z', user='franz-benjamin', out='meta')
+query = overpassQueryBuilder(area=nominatim.query('Heidelberg'), elementType='node', since='2017-01-01T00:00:00Z', to='2017-02-01T00:00:00Z', user='franz-benjamin', out='meta')
 ```
 
 We can now query an Overpass endpoint:

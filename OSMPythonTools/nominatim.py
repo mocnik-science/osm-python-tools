@@ -1,6 +1,7 @@
 import urllib.parse
 
 from OSMPythonTools.internal.cacheObject import CacheObject
+from OSMPythonTools.internal.elementShallow import ElementShallow
 
 class Nominatim(CacheObject):
     def __init__(self, endpoint='https://nominatim.openstreetmap.org/', **kwargs):
@@ -35,7 +36,7 @@ class Nominatim(CacheObject):
     def _rawToResult(self, data, queryString, params, shallow=False):
         return NominatimResult(data, queryString, params)
 
-class NominatimResult:
+class NominatimResult(ElementShallow):
     def __init__(self, json, queryString, params):
         self._json = [json] if queryString == 'reverse' else json
         self._queryString = queryString
@@ -62,10 +63,16 @@ class NominatimResult:
                 return d['address']
         return None
 
-    def areaId(self):
+    def id(self):
         for d in self._json:
-            if 'osm_type' in d and d['osm_type'] == 'relation' and 'osm_id' in d:
-                return 3600000000 + int(d['osm_id'])
+            if 'osm_type' in d and 'osm_id' in d:
+                return d['osm_id']
+        return None
+
+    def type(self):
+        for d in self._json:
+            if 'osm_type' in d and 'osm_id' in d:
+                return d['osm_type']
         return None
 
     def wkt(self):

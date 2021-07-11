@@ -1,3 +1,4 @@
+from OSMPythonTools.nominatim import Nominatim, NominatimResult
 import datetime as dt
 import sys
 import time
@@ -17,29 +18,13 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], co
         OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do not provide an area and a bounding box')
     if userid and user:
         OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do only provide one of the following: user id and username')
-    if isinstance(area, str):
-        area = area.strip()
-        way = True if area[0] == 'w' else False
-        # parse: 'way/*' and 'relation/*'
-        if len(area.split('/')) == 2:
-            if way:
-                area = int(area.split('/')[1]) + 2400000000
-            else:
-                area = int(area.split('/')[1]) + 3600000000
-        # parse: 'way *' and 'relation *'
-        elif len(area.split()) == 2:
-            if way:
-                area = int(area.split()[1]) + 2400000000
-            else:
-                area = int(area.split()[1]) + 3600000000
-        # parse: 'w*' and 'r*'
-        elif area[1] in '0123456789':
-            if way:
-                area = int(area[1:]) + 2400000000
-            else:
-                area = int(area[1:]) + 3600000000
-        else:
-            OSMPythonTools._raiseException('overpassQueryBuilder', 'Please make sure that your way or relation id is formatted properly: \'way/***\', \'way ***\', \'w***\', or \'relation/***\', \'relation ***\', or \'r***\'')
+    if isinstance(area, str) or isinstance(area, Element) or isinstance(area, NominatimResult):
+        area = Element.fromId(area)
+        areaId = area.areaId()
+    elif isinstance(area, int):
+        areaId = area
+    else:
+        areaId = None
     if not isinstance(elementType, list):
         elementType = [elementType]
     if not isinstance(selector, list):
@@ -53,10 +38,10 @@ def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], co
     dateRestriction = '(changed:"' + since + '"' + (',"' + to + '"' if to else '') + ')' if since else ''
     userRestriction = '(uid:' + ','.join(map(str, userid)) + ')' if userid else ''
     userRestriction2 = '(user:' + ','.join(map(lambda u: '"' + u + '"', user)) + ')' if user else ''
-    searchArea = '(' + 'area.searchArea' + ')' if area else ''
+    searchArea = '(' + 'area.searchArea' + ')' if areaId else ''
     searchBbox = '(' + ','.join(map(str, bbox)) + ')' if bbox else ''
     conditions = '(if: ' + ' && '.join(map(str, conditions)) + ')' if conditions else ''
-    query = ('area(' + str(area) + ')->.searchArea;(') if area else '('
+    query = ('area(' + str(areaId) + ')->.searchArea;(') if areaId else '('
     for e in elementType:
         query += e + ''.join(map(lambda x: '[' + x + ']', selector)) + conditions + dateRestriction + userRestriction + userRestriction2 + searchArea + searchBbox + ';'
     query += '); out ' + out + (' geom' if includeGeometry and 'geom' not in [o.strip() for o in out.split()] else '') + ';'

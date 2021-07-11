@@ -19,6 +19,7 @@ class CacheObject:
     def query(self, *args, onlyCached=False, shallow=False, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
         filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
+        makeDownload = False
         if not os.path.exists(self.__cacheDir):
             os.makedirs(self.__cacheDir)
         if os.path.exists(filename):
@@ -30,19 +31,22 @@ class CacheObject:
         elif shallow:
             data = shallow
         else:
+            makeDownload = True
+        if makeDownload:
             OSMPythonTools.logger.warning('[' + self._prefix + '] downloading data: ' + queryString)
             if self._waitForReady() == None:
                 if self.__lastQuery and self.__waitBetweenQueries and time.time() - self.__lastQuery < self.__waitBetweenQueries:
                     time.sleep(self.__waitBetweenQueries - time.time() + self.__lastQuery)
             self.__lastQuery = time.time()
             data = self.__query(queryString, params)
-            with open(filename, 'w') as file:
-                ujson.dump(data, file)
         result = self._rawToResult(data, queryString, params, shallow=shallow)
         if not self._isValid(result):
             msg = '[' + self._prefix + '] error in result (' + filename + '): ' + queryString
             OSMPythonTools.logger.exception(msg)
             raise(Exception(msg))
+        if makeDownload:
+            with open(filename, 'w') as file:
+                ujson.dump(data, file)
         return result
     
     def deleteQueryFromCache(self, *args, **kwargs):

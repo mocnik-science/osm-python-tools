@@ -80,6 +80,18 @@ heidelberg = nominatim.query(49.4093582, 8.694724, reverse=True, zoom=10, wkt=Tr
 # POLYGON((8.5731788 49.4236,8.5732444 49.4232662,8.5735169 49.4217463, ...
 ```
 
+## Lookup
+
+In some cases, you want to lookup information for an OSM element.  This situation is similar to providing a pair of coordinates but, instead of latitude and longitude, you provide the Id of the OSM element:
+```python
+from OSMPythonTools.nominatim import Nominatim
+nominatim = Nominatim()
+heidelberg = nominatim.query('relation/285864', lookup=True)
+print(heidelberg.displayName())
+# Heidelberg, Baden-Württemberg, Deutschland
+```
+The OSM ID can be provided in different standard formats, which are explained in the [general remarks](general-remarks.md).
+
 ## Parameters
 
 As a default, `OSMPythonTools.Nominatim` uses the endpoint `https://nominatim.openstreetmap.org/search`. If another one should be used, for example, a local one, corresponding data can be provided:

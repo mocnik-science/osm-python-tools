@@ -2,12 +2,13 @@ import urllib.parse
 
 from OSMPythonTools.internal.cacheObject import CacheObject
 from OSMPythonTools.internal.elementShallow import ElementShallow
+from OSMPythonTools.element import Element
 
 class Nominatim(CacheObject):
     def __init__(self, endpoint='https://nominatim.openstreetmap.org/', **kwargs):
         super().__init__('nominatim', endpoint, **kwargs)
 
-    def _queryString(self, *args, wkt=False, reverse=False, zoom=None, **kwargs):
+    def _queryString(self, *args, wkt=False, reverse=False, lookup=False, zoom=None, **kwargs):
         if reverse:
             query = 'reverse'
             [lat, lon] = args
@@ -16,6 +17,12 @@ class Nominatim(CacheObject):
             params['lon'] = lon
             if zoom is not None:
                 params['zoom'] = zoom
+            if wkt:
+                params['polygon_text'] = '1'
+        elif lookup:
+            query = 'lookup'
+            params = kwargs['params'] if 'params' in kwargs else {}
+            params['osm_ids'] = ','.join(map(lambda a: Element.fromId(a).typeIdShort().upper(), args))
             if wkt:
                 params['polygon_text'] = '1'
         else:

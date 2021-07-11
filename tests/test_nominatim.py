@@ -78,3 +78,12 @@ def test_coordinatesCountryWkt():
   assert len(x.toJSON()) > 0
   assert len(x.wkt()) > 0
   assert x.toJSON()
+
+def test_id():
+  nominatim = Nominatim()
+  x = nominatim.query('relation/285864', lookup=True)
+  assert x.isReverse() == False
+  assert x.displayName().startswith('Heidelberg')
+  assert x.areaId() == 3600285864
+  assert len(x.toJSON()) > 0
+  assert x.toJSON()

@@ -100,7 +100,7 @@ class Data:
             sels = list(map(lambda x: self.__select(**x), args))
             if not all(isinstance(sel, xr.Dataset) for sel in sels):
                 self._raiseException('If more than one selection is used, each of them has to contain a free dimension.')
-            return Data(self, sel)
+            return Data(self, self)
         self._raiseException('Use either only keyword arguments, or dictionaries as parameter.')
     
     def __select(self, valueName=None, **kwargs):
@@ -113,8 +113,8 @@ class Data:
             allVariableValues = list(self._dimensions[allVariable].keys())
             if not valueName:
                 valueName = allVariableValues
-            elif len(freeValues) != len(valueName):
-                self._raiseException('The lenth of the list for \'valueName\' must equal the number of values for the free dimension.')
+            elif len(allVariableValues) != len(valueName):
+                self._raiseException('The length of the list for \'valueName\' must equal the number of values for the free dimension.')
             return self.__select(**dict([(k, v) for k, v in kwargs.items() if k is not allVariable]), **{allVariable: allVariableValues}, valueName=valueName)
         # select list
         freeDimensionsWithRange = self.__freeDimensionsWithRange(**kwargs)
@@ -125,7 +125,7 @@ class Data:
             if not valueName:
                 valueName = freeValues
             elif len(freeValues) != len(valueName):
-                self._raiseException('The lenth of the list for \'valueName\' must equal the number of values for the free dimension.')
+                self._raiseException('The length of the list for \'valueName\' must equal the number of values for the free dimension.')
             das = []
             for x, name in zip(freeValues, valueName):
                 das += [self.__renameDataset(self.__select(**self.__fixedDimensions(**kwargs), **{freeVariable: x}), name)]

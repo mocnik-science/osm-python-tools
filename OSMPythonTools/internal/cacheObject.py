@@ -7,13 +7,14 @@ import urllib.request
 import OSMPythonTools
 
 class CacheObject:
-    def __init__(self, prefix, endpoint, cacheDir='cache', waitBetweenQueries=None, jsonResult=True):
+    def __init__(self, prefix, endpoint, cacheDir='cache', waitBetweenQueries=None, jsonResult=True, userAgent=None):
         self._prefix = prefix
         self._endpoint = endpoint
         self.__cacheDir = cacheDir
         self.__waitBetweenQueries = waitBetweenQueries
         self.__lastQuery = None
         self.__jsonResult = jsonResult
+        self.__userAgentProvidedByUser = userAgent
     
     def query(self, *args, onlyCached=False, shallow=False, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
@@ -67,7 +68,7 @@ class CacheObject:
         return None
     
     def _userAgent(self):
-        return '%s/%s (%s)' % (OSMPythonTools.pkgName, OSMPythonTools.pkgVersion, OSMPythonTools.pkgUrl)
+        return '%s%s/%s (%s)' % (self.__userAgentProvidedByUser + ' // ' if self.__userAgentProvidedByUser else '', OSMPythonTools.pkgName, OSMPythonTools.pkgVersion, OSMPythonTools.pkgUrl)
     
     def __hash(self, x):
         h = hashlib.sha1()

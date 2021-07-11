@@ -33,3 +33,21 @@ Complying with the usage policy of a server usually means to not overuse the ser
 api = Api(waitBetweenQueries=5) # waits at least 5 seconds between requests
 ```
 Please note that this paramter does not work for the [Overpass](overpass.md) module, because the Overpass server implements a load balancing strategy already. The [Overpass](overpass.md) module therefore receives such information from the Overpass server automatically and acts accordingly.
+
+### User agent
+
+In case you are using the `OSMPythonTools` more extensively, it is suggested that you adapt the user agent name. This makes possible for the servers used to track how much traffic you generate and, in case of an overuse, get into contact with you.
+
+By default, the following user agent is used (with `X.Y.Z` being the version number):
+```
+OSMPythonTools/X.Y.Z (https://github.com/mocnik-science/osm-python-tools)
+```
+To extend this user agent information, you can provide a user-defined user agent as follows:
+```python
+api = Api(userAgent='Example App')
+```
+This results in an extend user agent name:
+```
+Example App // OSMPythonTools/X.Y.Z (https://github.com/mocnik-science/osm-python-tools)
+```
+Please note that the default part cannot and should not be removed from the user agent name by intention. It is important for the operators of the servers you are using, for instance, when `OSMPythonTools` contains a bug that leads to heavy overuse. In this case, the maintainers of `OSMPythonTools` can be contacted directly by the operators.

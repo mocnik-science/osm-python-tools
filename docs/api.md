@@ -19,3 +19,22 @@ api = Api()
 api.query('way/108402486')
 api.query('relation/1539714')
 ```
+
+## Metadata
+
+When requesting data from the Api, the resulting object even contains some metadata about the request:
+```python
+from OSMPythonTools.api import Api
+api = Api()
+busStop = api.query('node/42467507')
+busStop.version()
+# 0.6
+busStop.generator()
+# CGImap 0.8.5 (3882970 spike-07.openstreetmap.org)
+busStop.copyright()
+# OpenStreetMap and contributors
+busStop.attribution()
+# http://www.openstreetmap.org/copyright
+busStop.license()
+# http://opendatacommons.org/licenses/odbl/1-0/
+```

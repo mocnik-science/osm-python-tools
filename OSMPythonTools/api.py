@@ -21,16 +21,16 @@ class ApiResult(Element):
     def __init__(self, xml, queryString, params, shallow=False):
         self._isValid = (xml != {} and xml is not None)
         self._xml = xml
-        self._soup = None
+        self._soup2 = None
         soupElement = None
         if self._isValid:
-            self._soup = BeautifulSoup(xml, 'xml')
-            if len(self._soup.find_all('node')) > 0:
-                soupElement = self._soup.node
-            if len(self._soup.find_all('way')) > 0:
-                soupElement = self._soup.way
-            if len(self._soup.find_all('relation')) > 0:
-                soupElement = self._soup.relation
+            self._soup2 = BeautifulSoup(xml, 'xml').find('osm')
+            if len(self._soup2.find_all('node')) > 0:
+                soupElement = self._soup2.node
+            if len(self._soup2.find_all('way')) > 0:
+                soupElement = self._soup2.way
+            if len(self._soup2.find_all('relation')) > 0:
+                soupElement = self._soup2.relation
         super().__init__(soup=soupElement, shallow=shallow)
         self._queryString = queryString
         self._params = params
@@ -50,7 +50,7 @@ class ApiResult(Element):
         return self._queryString
     
     def __get(self, prop):
-        return self._soup.attrs[prop] if self._isValid and prop in self._soup.attrs else None
+        return self._soup2.attrs[prop] if self._isValid and prop in self._soup2.attrs else None
     
     ### general information
     def version(self):

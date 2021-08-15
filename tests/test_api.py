@@ -1,5 +1,12 @@
 from OSMPythonTools.api import Api
 
+def metadata(x):
+  assert x.version() != None and x.version() != '' and float(x.version()) > 0
+  assert x.generator() != None and x.generator() != ''
+  assert x.copyright() != None and x.copyright() != ''
+  assert x.attribution() != None and x.attribution() != ''
+  assert x.license() != None and x.license() != ''
+
 def test_node():
   api = Api()
   x = api.query('node/42467507')
@@ -12,7 +19,7 @@ def test_node():
   assert x.tag('abcde') is None
   assert abs(x.lat() - 40.7014417) < .00001
   assert abs(x.lon() - (-73.9430797)) < .00001
-  assert int(x.version()) > 0
+  metadata(x)
 
 def test_way():
   api = Api()
@@ -26,7 +33,7 @@ def test_way():
   assert abs(x.nodes()[0].lon() - (-73.795)) < .01
   assert abs(x.nodes(shallow=False)[1].lat() - 40.866) < .01
   assert abs(x.nodes(shallow=False)[1].lon() - (-73.795)) < .01
-  assert int(x.version()) > 0
+  metadata(x)
 
 def test_relation():
   api = Api()
@@ -40,4 +47,4 @@ def test_relation():
   assert abs(x.members()[0].nodes()[0].lon() - (-73.795)) < .01
   assert abs(x.members(shallow=False)[1].nodes()[0].lat() - 40.866) < .01
   assert abs(x.members(shallow=False)[1].nodes()[0].lon() - (-73.795)) < .01
-  assert int(x.version()) > 0
+  metadata(x)

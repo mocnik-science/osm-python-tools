@@ -125,5 +125,5 @@ changedNodes.elements()[0].user()
 changedNodes.elements()[0].userid()
 # 4913117
 changedNodes.elements()[0].timestamp()
-'2017-01-03T13:47:23Z'
+# 2017-01-03 13:47:23+00:00'
 ```

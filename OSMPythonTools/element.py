@@ -1,4 +1,5 @@
 import copy
+import dateutil.parser
 import geojson
 import re
 
@@ -71,7 +72,7 @@ class Element(ElementShallow):
     def changeset(self):
         return self.__getElement('changeset')
     def timestamp(self):
-        return self.__getElement('timestamp')
+        return dateutil.parser.isoparse(self.__getElement('timestamp'))
     def user(self):
         return self.__getElement('user')
     def uid(self):

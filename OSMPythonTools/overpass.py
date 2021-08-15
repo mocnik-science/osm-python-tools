@@ -1,6 +1,7 @@
 from OSMPythonTools.nominatim import Nominatim, NominatimResult
 import datetime as dt
 import sys
+import dateutil.parser
 import time
 import urllib.parse
 import urllib.request
@@ -132,9 +133,9 @@ class OverpassResult:
     def generator(self):
         return self.__get('generator')
     def timestamp_osm_base(self):
-        return self.__get2('osm3s', 'timestamp_osm_base')
+        return dateutil.parser.isoparse(self.__get2('osm3s', 'timestamp_osm_base'))
     def timestamp_area_base(self):
-        return self.__get2('osm3s', 'timestamp_area_base')
+        return dateutil.parser.isoparse(self.__get2('osm3s', 'timestamp_area_base'))
     def copyright(self):
         return self.__get2('osm3s', 'copyright')
     def remark(self):

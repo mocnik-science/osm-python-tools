@@ -172,6 +172,8 @@ The following modules are available (please click on their names to access furth
 
 Please refer to the [general remarks](docs/general-remarks.md) page if you have further questions related to `OSMPythonTools` in general or functionality that the several modules have in common.
 
+**Observe the [breaking changes as included in the version history](version-history.md).**
+
 ## Logging
 
 This library is a little bit more verbose than other Python libraries. The good reason behind is that the OpenStreetMap, the Nominatim, and the Overpass servers experience a heavy load already and their resources should be used carefully. In order to make you, the user of this library, aware of when `OSMPythonTools` accesses these servers, corresponding information is logged by default. In case you want to suppress these messages, you have to insert the following lines *after* the import of `OSMPythonTools`:

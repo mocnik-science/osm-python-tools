@@ -20,6 +20,40 @@ api.query('way/108402486')
 api.query('relation/1539714')
 ```
 
+## History
+
+The history of an element can be requested easily like follows:
+```python
+from OSMPythonTools.api import Api
+api = Api()
+busStop = api.query('node/42467507')
+for b in busStop.history():
+  print()
+  print('ID              ', b.id())
+  print('Version         ', b.version())
+  print('Number of tags  ', len(b.tags()))
+#
+# ID               42467507
+# Version          1
+# Number of tags   4
+#
+# ID               42467507
+# Version          2
+# Number of tags   4
+#
+# ID               42467507
+# Version          3
+# Number of tags   0
+#
+# ID               42467507
+# Version          4
+# Number of tags   5
+#
+# ID               42467507
+# Version          5
+# Number of tags   1
+```
+
 ## Metadata
 
 When requesting data from the Api, the resulting object even contains some metadata about the request:

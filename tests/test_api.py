@@ -51,3 +51,16 @@ def test_relation():
   assert abs(x.members(shallow=False)[1].nodes()[0].lon() - (-73.795)) < .01
   assert int(x.version()) > 0
   metadata(x)
+
+def test_history():
+  api = Api()
+  busStop = api.query('node/42467507')
+  assert busStop.history() is None
+  busStop = api.query('node/42467507', history=True)
+  assert len(busStop.history()) >= 5
+  assert len(busStop.history()) == busStop.version()
+  for i, b in enumerate(busStop.history()):
+    assert b.id() == 42467507
+    assert b.type() == 'node'
+    assert b.version() == i + 1
+    assert len(b.tags()) >= 0

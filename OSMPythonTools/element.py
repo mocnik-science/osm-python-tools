@@ -12,9 +12,10 @@ def _extendAndRaiseException(e, msg):
     raise(Exception(msgComplete))
 
 class Element(ElementShallow):
-    def __init__(self, json=None, soup=None, shallow=False):
+    def __init__(self, json=None, soup=None, soupHistory=None, shallow=False):
         self._json = json
         self._soup = soup
+        self._soupHistory = soupHistory
         self._shallow = shallow
     
     @staticmethod
@@ -109,6 +110,17 @@ class Element(ElementShallow):
         nodes = self.__nodes()
         return len(nodes) if nodes is not None else None
     
+    ### history
+    def history(self):
+        if self._soupHistory is None:
+            return None
+        history = []
+        for soup in self._soupHistory:
+            h = copy.copy(self)
+            h._soup = soup
+            history.append(h)
+        return history
+
     ### members
     def __members(self):
         return self.__getElement('members') if self._json is not None else self._soup.find_all('member')

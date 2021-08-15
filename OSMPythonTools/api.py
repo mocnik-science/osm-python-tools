@@ -8,30 +8,29 @@ class Api(CacheObject):
     def __init__(self, endpoint='http://www.openstreetmap.org/api/0.6/', **kwargs):
         super().__init__('api', endpoint, jsonResult=False, **kwargs)
     
-    def _queryString(self, query, params={}):
+    def _queryString(self, query, params={}, history=False):
+        query = query + ('/history' if history else '')
         return (query, query, params)
     
     def _queryRequest(self, endpoint, queryString, params={}):
         return endpoint + queryString
     
     def _rawToResult(self, data, queryString, params, kwargs, shallow=False):
-        return ApiResult(data, queryString, params, shallow=shallow)
+        return ApiResult(data, queryString, params, shallow=shallow, history=kwargs['history'] if 'history' in kwargs else False)
 
 class ApiResult(Element):
-    def __init__(self, xml, queryString, params, shallow=False):
+    def __init__(self, xml, queryString, params, shallow=False, history=False):
         self._isValid = (xml != {} and xml is not None)
         self._xml = xml
         self._soup2 = None
-        soupElement = None
+        soup = None
+        soupHistory = None
         if self._isValid:
             self._soup2 = BeautifulSoup(xml, 'xml').find('osm')
-            if len(self._soup2.find_all('node')) > 0:
-                soupElement = self._soup2.node
-            if len(self._soup2.find_all('way')) > 0:
-                soupElement = self._soup2.way
-            if len(self._soup2.find_all('relation')) > 0:
-                soupElement = self._soup2.relation
-        super().__init__(soup=soupElement, shallow=shallow)
+            soupHistory = self._soup2.find_all(['node', 'way', 'relation'])
+            if len(soupHistory) > 0:
+                soup = soupHistory[-1]
+        super().__init__(soup=soup, soupHistory=soupHistory if history else None, shallow=shallow)
         self._queryString = queryString
         self._params = params
     

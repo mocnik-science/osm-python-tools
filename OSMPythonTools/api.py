@@ -53,7 +53,7 @@ class ApiResult(Element):
         return self._soup2.attrs[prop] if self._isValid and prop in self._soup2.attrs else None
     
     ### general information
-    def version(self):
+    def apiVersion(self):
         return self.__get('version')
     def generator(self):
         return self.__get('generator')

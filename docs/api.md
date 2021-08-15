@@ -27,7 +27,7 @@ When requesting data from the Api, the resulting object even contains some metad
 from OSMPythonTools.api import Api
 api = Api()
 busStop = api.query('node/42467507')
-busStop.version()
+busStop.apiVersion()
 # 0.6
 busStop.generator()
 # CGImap 0.8.5 (3882970 spike-07.openstreetmap.org)

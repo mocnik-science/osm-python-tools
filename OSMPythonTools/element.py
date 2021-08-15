@@ -66,7 +66,7 @@ class Element(ElementShallow):
     def visible(self):
         return self.__getElement('visible')
     def version(self):
-        return self.__getElement('version')
+        return int(self.__getElement('version'))
     def changeset(self):
         return self.__getElement('changeset')
     def timestamp(self):

@@ -39,7 +39,7 @@ class CacheObject:
                     time.sleep(self.__waitBetweenQueries - time.time() + self.__lastQuery)
             self.__lastQuery = time.time()
             data = self.__query(queryString, params)
-        result = self._rawToResult(data, queryString, params, shallow=shallow)
+        result = self._rawToResult(data, queryString, params, kwargs, shallow=shallow)
         if not self._isValid(result):
             msg = '[' + self._prefix + '] error in result (' + filename + '): ' + queryString
             OSMPythonTools.logger.exception(msg)
@@ -62,7 +62,7 @@ class CacheObject:
     def _queryRequest(self, endpoint, queryString, params={}):
         raise(NotImplementedError('Subclass should implement _queryRequest'))
     
-    def _rawToResult(self, data, queryString, params, shallow=False):
+    def _rawToResult(self, data, queryString, params, kwargs, shallow=False):
         raise(NotImplementedError('Subclass should implement _rawToResult'))
     
     def _isValid(self, result):

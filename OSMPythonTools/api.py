@@ -14,7 +14,7 @@ class Api(CacheObject):
     def _queryRequest(self, endpoint, queryString, params={}):
         return endpoint + queryString
     
-    def _rawToResult(self, data, queryString, params, shallow=False):
+    def _rawToResult(self, data, queryString, params, kwargs, shallow=False):
         return ApiResult(data, queryString, params, shallow=shallow)
 
 class ApiResult(Element):

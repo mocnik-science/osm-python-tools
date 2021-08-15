@@ -40,7 +40,7 @@ class Nominatim(CacheObject):
         params['format'] = 'json'
         return endpoint + queryString + '?' + urllib.parse.urlencode(params)
 
-    def _rawToResult(self, data, queryString, params, shallow=False):
+    def _rawToResult(self, data, queryString, params, kwargs, shallow=False):
         return NominatimResult(data, queryString, params)
 
 class NominatimResult(ElementShallow):

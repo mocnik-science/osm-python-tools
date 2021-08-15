@@ -73,7 +73,7 @@ class Overpass(CacheObject):
     def _queryRequest(self, endpoint, queryString, params={}):
         return urllib.request.Request(endpoint + 'interpreter', urllib.parse.urlencode({'data': queryString}).encode('utf-8'))
     
-    def _rawToResult(self, data, queryString, params, shallow=False):
+    def _rawToResult(self, data, queryString, params, kwargs, shallow=False):
         return OverpassResult(data, queryString, params)
     
     def _isValid(self, result):

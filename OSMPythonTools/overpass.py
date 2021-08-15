@@ -1,6 +1,5 @@
 from OSMPythonTools.nominatim import Nominatim, NominatimResult
 import datetime as dt
-import sys
 import dateutil.parser
 import time
 import urllib.parse

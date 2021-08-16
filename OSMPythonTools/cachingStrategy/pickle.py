@@ -18,7 +18,7 @@ class Pickle(CachingStrategyBase):
     def set(self, key, value):
         if self._cache is None:
             self.open()
-        with self._open(self._cacheFile, 'wb') as file:
+        with self._open(self._cacheFile, 'ab') as file:
             pickle.dump((key, value), file)
         self._cache[key] = value
 

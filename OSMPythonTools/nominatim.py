@@ -40,14 +40,15 @@ class Nominatim(CacheObject):
         params['format'] = 'json'
         return endpoint + queryString + '?' + urllib.parse.urlencode(params)
 
-    def _rawToResult(self, data, queryString, params, kwargs, shallow=False):
-        return NominatimResult(data, queryString, params)
+    def _rawToResult(self, data, queryString, params, kwargs, cacheMetadata=None, shallow=False):
+        return NominatimResult(data, queryString, params, cacheMetadata=cacheMetadata)
 
 class NominatimResult(ElementShallow):
-    def __init__(self, json, queryString, params):
+    def __init__(self, json, queryString, params, cacheMetadata=None):
         self._json = [json] if queryString == 'reverse' else json
         self._queryString = queryString
         self._params = params
+        super().__init__(cacheMetadata)
 
     def toJSON(self):
         return self._json

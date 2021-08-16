@@ -7,3 +7,5 @@ __pycache__
 /OSMPythonTools/**/*.pyc
 /OSMPythonTools.egg-info
 .coverage
+cache.pickle
+cache.pickle.gzip

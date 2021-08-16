@@ -64,3 +64,19 @@ This results in an extend user agent name:
 Example App // OSMPythonTools/X.Y.Z (https://github.com/mocnik-science/osm-python-tools)
 ```
 Please note that the default part cannot and should not be removed from the user agent name by intention. It is important for the operators of the servers you are using, for instance, when `OSMPythonTools` contains a bug that leads to heavy overuse. In this case, the maintainers of `OSMPythonTools` can be contacted directly by the operators.
+
+### Caching Strategies
+
+The data is cached to ensure that the resources of the various services employed by this library, including the [Overpass endpoint](https://wiki.openstreetmap.org/wiki/Overpass_API), [Nominatim](http://nominatim.openstreetmap.org), and the [OSM API](https://wiki.openstreetmap.org/wiki/API), are not overused.  While the caching strategies supported are very similar in structure, they store the data in different formats.  By default, the data is stored in individual files in the JSON format:
+```python
+api = Api()
+api = Api(cachingStrategy=CachingStrategyJSON()) # this is the default
+```
+As an alternative, the data can also be [pickled](https://docs.python.org/3/library/pickle.html) and stored in one file:
+```python
+api = Api(cachingStrategy=CachingStrategyPickle())
+```
+The pickle file is gzipped by default, the latter of which can be disabled:
+```python
+api = Api(cachingStrategy=CachingStrategyPickle(gzip=False))
+```

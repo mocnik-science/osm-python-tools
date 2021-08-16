@@ -7,6 +7,8 @@ Observe that some of the following versions include breaking changes:
 ## Version v0.3.3
 
 * [feature] access to history
+* [feature] caching strategies introduced
+* [feature] caching strategy `CachingStrategyPickle`
 * [improvement; breaking change] timestamps are now returned as objects
 * [bug] metadata did not work for Api queries
 * [minor bug] version was not returned as an integer

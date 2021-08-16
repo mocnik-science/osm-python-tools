@@ -8,6 +8,7 @@ import urllib.request
 import OSMPythonTools
 from OSMPythonTools.element import Element
 from OSMPythonTools.internal.cacheObject import CacheObject
+from OSMPythonTools.internal.response import Response
 
 def overpassQueryBuilder(area=None, bbox=None, elementType=None, selector=[], conditions=[], since=None, to=None, userid=None, user=None, includeGeometry=False, includeCenter=False, out='body'):
     if not elementType:
@@ -73,8 +74,8 @@ class Overpass(CacheObject):
     def _queryRequest(self, endpoint, queryString, params={}):
         return urllib.request.Request(endpoint + 'interpreter', urllib.parse.urlencode({'data': queryString}).encode('utf-8'))
     
-    def _rawToResult(self, data, queryString, params, kwargs, shallow=False):
-        return OverpassResult(data, queryString, params)
+    def _rawToResult(self, data, queryString, params, kwargs, cacheMetadata=None, shallow=False):
+        return OverpassResult(data, queryString, params, cacheMetadata=cacheMetadata)
     
     def _isValid(self, result):
         return result.isValid()
@@ -102,11 +103,12 @@ class Overpass(CacheObject):
         except:
             raise(Exception('[' + self._prefix + '] could not fetch or interpret status of the endpoint'))
 
-class OverpassResult:
-    def __init__(self, json, queryString, params):
+class OverpassResult(Response):
+    def __init__(self, json, queryString, params, cacheMetadata=None):
         self._json = json
         self._elements = list(map(lambda e: Element(json=e), self.__get('elements')))
         self._queryString = queryString
+        super().__init__(cacheMetadata)
     
     def isValid(self):
         remark = self.remark()

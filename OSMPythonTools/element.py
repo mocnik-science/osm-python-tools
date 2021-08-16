@@ -13,11 +13,12 @@ def _extendAndRaiseException(e, msg):
     raise(Exception(msgComplete))
 
 class Element(ElementShallow):
-    def __init__(self, json=None, soup=None, soupHistory=None, shallow=False):
+    def __init__(self, cacheMetadata=None, json=None, soup=None, soupHistory=None, shallow=False):
         self._json = json
         self._soup = soup
         self._soupHistory = soupHistory
         self._shallow = shallow
+        super().__init__(cacheMetadata)
     
     @staticmethod
     def fromId(idToParse):

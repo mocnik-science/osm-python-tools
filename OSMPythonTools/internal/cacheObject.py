@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 import os
 import time
@@ -5,12 +6,13 @@ import ujson
 import urllib.request
 
 import OSMPythonTools
+from OSMPythonTools.cachingStrategy.json import CachingStrategyJSON
 
 class CacheObject:
-    def __init__(self, prefix, endpoint, cacheDir='cache', waitBetweenQueries=None, jsonResult=True, userAgent=None):
+    def __init__(self, prefix, endpoint, cachingStrategy=CachingStrategyJSON.instance(), waitBetweenQueries=None, jsonResult=True, userAgent=None):
         self._prefix = prefix
         self._endpoint = endpoint
-        self.__cacheDir = cacheDir
+        self.__cachingStrategy = cachingStrategy
         self.__waitBetweenQueries = waitBetweenQueries
         self.__lastQuery = None
         self.__jsonResult = jsonResult
@@ -18,35 +20,41 @@ class CacheObject:
     
     def query(self, *args, onlyCached=False, shallow=False, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
-        filename = self.__cacheDir + '/' + self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
+        key = self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
+        data = self.__cachingStrategy.get(key)
         makeDownload = False
-        if not os.path.exists(self.__cacheDir):
-            os.makedirs(self.__cacheDir)
-        if os.path.exists(filename):
-            with open(filename, 'r') as file:
-                data = ujson.load(file)
+        if data is not None:
+            if 'version' not in data or 'response' not in data or 'timestamp' not in data:
+                data = {
+                    'version': '0.1',
+                    'response': data,
+                    'timestamp': None,
+                }
         elif onlyCached:
             OSMPythonTools.logger.error('[' + self._prefix + '] data not cached: ' + queryString)
             return None
         elif shallow:
-            data = shallow
+            data = {
+                'version': '1.0',
+                'response': shallow,
+                'timestamp': None,
+            }
         else:
             makeDownload = True
-        if makeDownload:
             OSMPythonTools.logger.warning('[' + self._prefix + '] downloading data: ' + queryString)
             if self._waitForReady() == None:
                 if self.__lastQuery and self.__waitBetweenQueries and time.time() - self.__lastQuery < self.__waitBetweenQueries:
                     time.sleep(self.__waitBetweenQueries - time.time() + self.__lastQuery)
             self.__lastQuery = time.time()
             data = self.__query(queryString, params)
-        result = self._rawToResult(data, queryString, params, kwargs, shallow=shallow)
+        cacheMetadata = {key: data[key] for key in ['version', 'timestamp']}
+        result = self._rawToResult(data['response'], queryString, params, kwargs, cacheMetadata=cacheMetadata, shallow=shallow)
         if not self._isValid(result):
-            msg = '[' + self._prefix + '] error in result (' + filename + '): ' + queryString
+            msg = '[' + self._prefix + '] error in result (' + key + '): ' + queryString
             OSMPythonTools.logger.exception(msg)
             raise(Exception(msg))
         if makeDownload:
-            with open(filename, 'w') as file:
-                ujson.dump(data, file)
+            self.__cachingStrategy.set(key, data)
         return result
     
     def deleteQueryFromCache(self, *args, **kwargs):
@@ -95,5 +103,10 @@ class CacheObject:
             OSMPythonTools.logger.exception(msg)
             raise Exception(msg, err)
         encoding = response.info().get_content_charset('utf-8')
-        r = response.read().decode(encoding)
-        return ujson.loads(r) if self.__jsonResult else r
+        resp = response.read().decode(encoding)
+        r = {
+            'version': '1.0',
+            'response': ujson.loads(resp) if self.__jsonResult else resp,
+            'timestamp': datetime.datetime.now().isoformat(),
+        }
+        return r

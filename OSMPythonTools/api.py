@@ -15,11 +15,11 @@ class Api(CacheObject):
     def _queryRequest(self, endpoint, queryString, params={}):
         return endpoint + queryString
     
-    def _rawToResult(self, data, queryString, params, kwargs, shallow=False):
-        return ApiResult(data, queryString, params, shallow=shallow, history=kwargs['history'] if 'history' in kwargs else False)
+    def _rawToResult(self, data, queryString, params, kwargs, cacheMetadata=None, shallow=False):
+        return ApiResult(data, queryString, params, cacheMetadata=cacheMetadata, shallow=shallow, history=kwargs['history'] if 'history' in kwargs else False)
 
 class ApiResult(Element):
-    def __init__(self, xml, queryString, params, shallow=False, history=False):
+    def __init__(self, xml, queryString, params, cacheMetadata=None, shallow=False, history=False):
         self._isValid = (xml != {} and xml is not None)
         self._xml = xml
         self._soup2 = None
@@ -30,7 +30,7 @@ class ApiResult(Element):
             soupHistory = self._soup2.find_all(['node', 'way', 'relation'])
             if len(soupHistory) > 0:
                 soup = soupHistory[-1]
-        super().__init__(soup=soup, soupHistory=soupHistory if history else None, shallow=shallow)
+        super().__init__(cacheMetadata, soup=soup, soupHistory=soupHistory if history else None, shallow=shallow)
         self._queryString = queryString
         self._params = params
     

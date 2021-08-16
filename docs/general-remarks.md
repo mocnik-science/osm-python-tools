@@ -69,6 +69,7 @@ Please note that the default part cannot and should not be removed from the user
 
 The data is cached to ensure that the resources of the various services employed by this library, including the [Overpass endpoint](https://wiki.openstreetmap.org/wiki/Overpass_API), [Nominatim](http://nominatim.openstreetmap.org), and the [OSM API](https://wiki.openstreetmap.org/wiki/API), are not overused.  While the caching strategies supported are very similar in structure, they store the data in different formats.  By default, the data is stored in individual files in the JSON format:
 ```python
+from OSMPythonTools.cachingStrategy import CachingStrategyJSON, CachingStrategyPickle
 api = Api()
 api = Api(cachingStrategy=CachingStrategyJSON()) # this is the default
 ```

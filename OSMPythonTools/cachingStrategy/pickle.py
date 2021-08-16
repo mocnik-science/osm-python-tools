@@ -21,9 +21,9 @@ class CachingStrategyPickle(CachingStrategy):
 
     def useGzip(self, gzip=True):
         if self._cache is not None:
-            self._instance.close()
-        self._instance._cacheFile = self._cacheFileRaw + '.pickle' + ('.gzip' if gzip else '')
-        self._instance._open = libraryGzip.open if gzip else open
+            self.close()
+        self._cacheFile = self._cacheFileRaw + '.pickle' + ('.gzip' if gzip else '')
+        self._open = libraryGzip.open if gzip else open
         return self
 
     def get(self, key):

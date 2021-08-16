@@ -1,10 +1,16 @@
 import pytest
+from OSMPythonTools import cachingStrategy
 
 from OSMPythonTools.api import Api
 from OSMPythonTools.cachingStrategy import CachingStrategyJSON, CachingStrategyPickle
 
-@pytest.mark.parametrize(('cachingStrategy'), [CachingStrategyJSON.instance(), CachingStrategyPickle.instance(), CachingStrategyPickle.instance(gzip=False)])
-def test_cache(cachingStrategy):
+@pytest.mark.parametrize(('cachingStrategyF'), [
+  lambda: CachingStrategyJSON.instance(),
+  lambda: CachingStrategyPickle.instance(),
+  lambda: CachingStrategyPickle.instance(gzip=False)
+])
+def test_cache(cachingStrategyF):
+  cachingStrategy = cachingStrategyF()
   api = Api(cachingStrategy=cachingStrategy)
   x = api.query('node/42467507')
   y = api.query('node/42467507')

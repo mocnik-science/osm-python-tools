@@ -1,2 +1,3 @@
-from OSMPythonTools.cachingStrategy.json import CachingStrategyJSON
-from OSMPythonTools.cachingStrategy.pickle import CachingStrategyPickle
+from OSMPythonTools.cachingStrategy.json import JSON
+from OSMPythonTools.cachingStrategy.pickle import Pickle
+from OSMPythonTools.cachingStrategy.strategy import CachingStrategy

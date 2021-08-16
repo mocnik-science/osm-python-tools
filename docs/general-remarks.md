@@ -67,17 +67,19 @@ Please note that the default part cannot and should not be removed from the user
 
 ### Caching Strategies
 
-The data is cached to ensure that the resources of the various services employed by this library, including the [Overpass endpoint](https://wiki.openstreetmap.org/wiki/Overpass_API), [Nominatim](http://nominatim.openstreetmap.org), and the [OSM API](https://wiki.openstreetmap.org/wiki/API), are not overused.  While the caching strategies supported are very similar in structure, they store the data in different formats.  By default, the data is stored in individual files in the JSON format:
+The data is cached to ensure that the resources of the various services employed by this library, including the [Overpass endpoint](https://wiki.openstreetmap.org/wiki/Overpass_API), [Nominatim](http://nominatim.openstreetmap.org), and the [OSM API](https://wiki.openstreetmap.org/wiki/API), are not overused.  While the caching strategies supported are very similar in structure, they store the data in different formats.  By default, the data is stored in individual files in the JSON format.  As an alternative, the data can also be [pickled](https://docs.python.org/3/library/pickle.html) and stored in one file:
 ```python
-from OSMPythonTools.cachingStrategy import CachingStrategyJSON, CachingStrategyPickle
-api = Api()
-api = Api(cachingStrategy=CachingStrategyJSON()) # this is the default
+from OSMPythonTools.cachingStrategy import CachingStrategy, JSON, Pickle
+CachingStrategy.use(Pickle)
+...
 ```
-As an alternative, the data can also be [pickled](https://docs.python.org/3/library/pickle.html) and stored in one file:
+The caching strategy chosen applies to all subsequent requests.  The pickle file is gzipped by default.  This behaviour can, however, be changed:
 ```python
-api = Api(cachingStrategy=CachingStrategyPickle())
+CachingStrategy.use(Pickle, gzip=False)
+...
 ```
-The pickle file is gzipped by default, the latter of which can be disabled:
+The default behaviourcan be restored as follows:
 ```python
-api = Api(cachingStrategy=CachingStrategyPickle(gzip=False))
+CachingStrategy.use(JSON)
+...
 ```

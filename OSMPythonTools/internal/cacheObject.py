@@ -6,13 +6,12 @@ import ujson
 import urllib.request
 
 import OSMPythonTools
-from OSMPythonTools.cachingStrategy.json import CachingStrategyJSON
+from OSMPythonTools.cachingStrategy import CachingStrategy
 
 class CacheObject:
-    def __init__(self, prefix, endpoint, cachingStrategy=CachingStrategyJSON.instance(), waitBetweenQueries=None, jsonResult=True, userAgent=None):
+    def __init__(self, prefix, endpoint, waitBetweenQueries=None, jsonResult=True, userAgent=None):
         self._prefix = prefix
         self._endpoint = endpoint
-        self.__cachingStrategy = cachingStrategy
         self.__waitBetweenQueries = waitBetweenQueries
         self.__lastQuery = None
         self.__jsonResult = jsonResult
@@ -21,7 +20,7 @@ class CacheObject:
     def query(self, *args, onlyCached=False, shallow=False, **kwargs):
         queryString, hashString, params = self._queryString(*args, **kwargs)
         key = self._prefix + '-' + self.__hash(hashString + ('????' + urllib.parse.urlencode(sorted(params.items())) if params else ''))
-        data = self.__cachingStrategy.get(key)
+        data = CachingStrategy.get(key)
         makeDownload = False
         if data is not None:
             if 'version' not in data or 'response' not in data or 'timestamp' not in data:
@@ -54,7 +53,7 @@ class CacheObject:
             OSMPythonTools.logger.exception(msg)
             raise(Exception(msg))
         if makeDownload:
-            self.__cachingStrategy.set(key, data)
+            CachingStrategy.set(key, data)
         return result
     
     def deleteQueryFromCache(self, *args, **kwargs):

@@ -2,41 +2,25 @@ import os.path
 import pickle
 import gzip as libraryGzip
 
-from OSMPythonTools.cachingStrategy.strategy import CachingStrategy
+from OSMPythonTools.cachingStrategy.base import CachingStrategyBase
 
-class CachingStrategyPickle(CachingStrategy):
-    _instance = None
-
-    def __init__(self, cacheDir='cache'):
-        raise RuntimeError('Call instance() instead')
-
-    @classmethod
-    def instance(cls, cacheFile='cache', gzip=True):
-        if cls._instance is None:
-            cls._instance = cls.__new__(cls)
-        cls._instance.close()
-        cls._instance._cacheFileRaw = cacheFile
-        cls._instance.useGzip(gzip)
-        return cls._instance
-
-    def useGzip(self, gzip=True):
-        if self._cache is not None:
-            self.close()
-        self._cacheFile = self._cacheFileRaw + '.pickle' + ('.gzip' if gzip else '')
+class Pickle(CachingStrategyBase):
+    def __init__(self, cacheFile='cache', gzip=True):
+        self._cacheFile = cacheFile + '.pickle' + ('.gzip' if gzip else '')
         self._open = libraryGzip.open if gzip else open
-        return self
+        self.close()
 
     def get(self, key):
         if self._cache is None:
             self.open()
         return self._cache[key] if key in self._cache else None
 
-    def set(self, key, data):
+    def set(self, key, value):
         if self._cache is None:
             self.open()
         with self._open(self._cacheFile, 'wb') as file:
-            pickle.dump((key, data), file)
-        self._cache[key] = data
+            pickle.dump((key, value), file)
+        self._cache[key] = value
 
     def open(self):
         if os.path.exists(self._cacheFile):

@@ -1,22 +1,11 @@
 import os.path
 import ujson
 
-from OSMPythonTools.cachingStrategy.strategy import CachingStrategy
+from OSMPythonTools.cachingStrategy.base import CachingStrategyBase
 
-class CachingStrategyJSON(CachingStrategy):
-    _instance = None
-
+class JSON(CachingStrategyBase):
     def __init__(self, cacheDir='cache'):
-        raise RuntimeError('Call instance() instead')
-
-    @classmethod
-    def instance(cls, cacheDir='cache'):
-        if cls._instance is None:
-            cls._instance = cls.__new__(cls)
-        else:
-            cls._instance.close()
-        cls._instance._cacheDir = cacheDir
-        return cls._instance
+        self._cacheDir = cacheDir
 
     def _filename(self, key):
         return os.path.join(self._cacheDir, key)
@@ -31,6 +20,6 @@ class CachingStrategyJSON(CachingStrategy):
                 data = ujson.load(file)
         return data
 
-    def set(self, key, data):
+    def set(self, key, value):
         with open(self._filename(key), 'w') as file:
-            ujson.dump(data, file)
+            ujson.dump(value, file)

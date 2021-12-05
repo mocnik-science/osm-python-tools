@@ -19,11 +19,15 @@ setuptools.setup(
         'matplotlib',
         'numpy',
         'pandas',
-        'pytest',
-        'pytest-sugar',
         'ujson',
         'xarray',
     ],
+    extras_require={
+        'test': [
+            'pytest',
+            'pytest-sugar',
+        ],
+    },
     version=pkgVersion,
     author='Franz-Benjamin Mocnik',
     author_email='mail@mocnik-science.net',

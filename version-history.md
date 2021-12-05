@@ -9,6 +9,7 @@ Observe that some of the following versions include breaking changes:
 * [feature] access to history
 * [feature] caching strategies introduced
 * [feature] caching strategy `CachingStrategyPickle`
+* [improvement] dependencies for testing are now only installed on request
 * [improvement; breaking change] timestamps are now returned as objects
 * [bug] metadata did not work for Api queries
 * [minor bug] version was not returned as an integer

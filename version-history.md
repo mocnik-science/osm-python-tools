@@ -2,7 +2,7 @@
 
 # Version History
 
-Observe that some of the following versions include breaking changes:
+Please note that versions may include breaking changes.
 
 ## Version v0.3.3
 
@@ -14,3 +14,7 @@ Observe that some of the following versions include breaking changes:
 * [bug] metadata did not work for Api queries
 * [minor bug] version was not returned as an integer
 * [minor bug] the method to access the Api version was overwritten by the method to access the element version
+
+Breaking changes:
+
+* The constructors of the classes `Api`, `Nominatim`, and `Overpass` do not accept the paramter `cacheDir` any longer.  Instead, the parameter needs to be provided to the method `CachingStrategy.use`.

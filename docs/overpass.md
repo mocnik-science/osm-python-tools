@@ -64,7 +64,7 @@ from OSMPythonTools.overpass import Overpass
 overpass = Overpass()
 busStops = overpass.query(query)
 ```
-Please observe that the constructor of the class `Overpass` again accepts the parameters `endpoint`, `cacheDir`, and `waitBetweenQueries`.
+Please observe that the constructor of the class `Overpass` again accepts the parameters `endpoint` and `waitBetweenQueries`.
 To query historical data, we can easily add a date:
 ```python
 overpass.query(query, date='2014-01-01T00:00:00Z')

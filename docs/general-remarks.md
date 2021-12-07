@@ -78,8 +78,12 @@ The caching strategy chosen applies to all subsequent requests.  The pickle file
 CachingStrategy.use(Pickle, gzip=False)
 ...
 ```
-The default behaviourcan be restored as follows:
+The default behaviour can be restored as follows:
 ```python
 CachingStrategy.use(JSON)
 ...
+```
+In case you want to change the path where the files are stored, you can add a corresponding parameter `cacheDir`:
+```python
+CachingStrategy.use(JSON, cacheDir='saveCacheHere')
 ```

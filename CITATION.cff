@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please provide a link to the following paper about data mining infrastructure for exploring and analysing OpenStreetMap data."
+authors:
+- family-names: "Mocnik"
+  given-names: "Franz-Benjamin"
+  orcid: "https://orcid.org/0000-0002-1759-6336"
+title: "OSMPythonTools"
+doi: 10.1186/s40965-018-0047-6
+url: "https://github.com/mocnik-science/osm-python-tools"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Mocnik"
+    given-names: "Franz-Benjamin"
+    orcid: "https://orcid.org/0000-0002-1759-6336"
+  - family-names: "Mobasheri"
+    given-names: "Amin"
+  - family-names: "Zipf"
+    given-names: "Alexander"
+  title: "Open Source Data Mining Infrastructure for Exploring and Analysing OpenStreetMap"
+  journal: "Open Geospatial Data, Software and Standards"
+  issue: 3
+  volume: 7
+  year: 2018
+  doi: 10.1186/s40965-018-0047-6

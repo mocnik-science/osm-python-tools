@@ -98,10 +98,6 @@ As a default, `OSMPythonTools.Nominatim` uses the endpoint `https://nominatim.op
 ```python
 nominatim = Nominatim(endpoint='https://nominatim.openstreetmap.org/search')
 ```
-The data is automatically cached into a the directory `./cache`. If another directory shall be used, the directory name can be provided:
-```python
-nominatim = Nominatim(cacheDir='cache')
-```
 In case of numerous requests, one may want to delay the requests. The fetching process can, for example, be instructed to wait 2 seconds between the queries sent to Nominatim:
 ```python
 nominatim = Nominatim(waitBetweenQueries=2)

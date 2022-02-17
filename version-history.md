@@ -4,6 +4,10 @@
 
 Please note that versions may include breaking changes.
 
+## Version v0.3.4
+
+* [bug] areaId was only computed for the first element of a `NominatimResult`, but not for the first element for which it does not vanish
+
 ## Version v0.3.3
 
 * [feature] access to history

@@ -88,3 +88,11 @@ class NominatimResult(ElementShallow):
             if 'geotext' in d:
                 return d['geotext']
         return None
+
+    def areaId(self):
+        for d in self._json:
+            if 'osm_type' in d and 'osm_id' in d:
+                areaId = self._areaId(d['osm_type'], d['osm_id'])
+                if areaId is not None:
+                    return areaId
+        return None

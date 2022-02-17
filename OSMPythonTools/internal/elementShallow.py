@@ -12,9 +12,11 @@ class ElementShallow(Response):
     def typeIdShort(self):
         return self.type()[0] + str(self.id()) if self.type() != None and self.id() != None else None
     def areaId(self):
-        if self.type() == 'way':
-            return self.id() + 2400000000
-        elif self.type() == 'relation':
-            return self.id() + 3600000000
+        return self._areaId(self.type(), self.id())
+    def _areaId(self, type, id):
+        if type == 'way':
+            return id + 2400000000
+        elif type == 'relation':
+            return id + 3600000000
         else:
             return None

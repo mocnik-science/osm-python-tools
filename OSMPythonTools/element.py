@@ -156,7 +156,7 @@ class Element(ElementShallow):
 
     ### geometry
     def geometry(self):
-        return self.__geometry(self)
+        return self.__geometry()
     def __geometry(self, asList=False):
         try:
             if self.type() == 'node':
@@ -172,7 +172,7 @@ class Element(ElementShallow):
                     dSoup = BeautifulSoup(d._xml, 'xml')
                     nodeIds = [n['ref'] for n in dSoup.find(self.type(), id=str(self.id())).children if n.name == 'nd']
                     cs = [dSoup.osm.find('node', id=nId) for nId in nodeIds]
-                    cs = [{'lat': float(c['lat']), 'lon': float(c['lon'])} for c in cs]
+                    cs = [(float(c['lon']), float(c['lat'])) for c in cs]
                 if asList:
                     return cs
                 if self.__geometry_equal(cs[0], cs[-1]):

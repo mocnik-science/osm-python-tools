@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 import copy
 import dateutil.parser
 import geojson
@@ -124,10 +125,10 @@ class Element(ElementShallow):
         return history
 
     ### members
-    def __members(self):
-        return self.__getElement('members') if self._json is not None else self._soup.find_all('member')
-    def members(self, shallow=True):
-        members = self.__members()
+    def __members(self, onlyInner=False, onlyOuter=False):
+        return [m for m in (self.__getElement('members') if self._json is not None else self._soup.find_all('member')) if (not onlyInner or m['role'] == 'inner') and (not onlyOuter or m['role'] == 'outer')]
+    def members(self, shallow=True, onlyInner=False, onlyOuter=False):
+        members = self.__members(onlyInner=onlyInner, onlyOuter=onlyOuter)
         if members is None or len(members) == 0:
             return []
         api = SingletonApi()
@@ -155,25 +156,34 @@ class Element(ElementShallow):
 
     ### geometry
     def geometry(self):
+        return self.__geometry(self)
+    def __geometry(self, asList=False):
         try:
             if self.type() == 'node':
                 if not self.lon() or not self.lat():
                     self._raiseException('Cannot build geometry: geometry information not included.')
-                return geojson.Point((self.lon(), self.lat()))
+                return [(self.lon(), self.lat())] if asList else geojson.Point((self.lon(), self.lat()))
             elif self.type() == 'way':
-                if not self.__getElement('geometry'):
-                    self._raiseException('Cannot build geometry: geometry information not included.')
-                cs = self.__geometry_csToList(self.__getElement('geometry'))
+                if self.__getElement('geometry'):
+                    cs = self.__geometry_csToList(self.__getElement('geometry'))
+                else:
+                    api = OSMPythonTools.api.Api()
+                    d = api.query(self.type() + '/' + str(self.id()) + '/full')
+                    dSoup = BeautifulSoup(d._xml, 'xml')
+                    nodeIds = [n['ref'] for n in dSoup.find(self.type(), id=str(self.id())).children if n.name == 'nd']
+                    cs = [dSoup.osm.find('node', id=nId) for nId in nodeIds]
+                    cs = [{'lat': float(c['lat']), 'lon': float(c['lon'])} for c in cs]
+                if asList:
+                    return cs
                 if self.__geometry_equal(cs[0], cs[-1]):
                     return geojson.Polygon([cs])
                 else:
                     return geojson.LineString(cs)
             elif self.type() == 'relation':
-                members = copy.deepcopy(self.__members())
-                membersOuter = self.__geometry_extract(members, 'outer')
+                membersOuter = self.__geometry_extract(self.members(onlyOuter=True))
                 if len(membersOuter) == 0:
                     self._raiseException('Cannot build geometry: no outer rings found.')
-                membersInner = self.__geometry_extract(members, 'inner')
+                membersInner = self.__geometry_extract(self.members(onlyInner=True))
                 ringsOuter = self.__geometry_buildRings(membersOuter)
                 ringsInner = self.__geometry_buildRings(membersInner)
                 ringsOuter = self.__geometry_orientRings(ringsOuter, positive=True)
@@ -219,14 +229,12 @@ class Element(ElementShallow):
         return [list(reversed(r)) if positive ^ self.__geometry_polygonPositiveOriented(r) else r for r in rings]
     def __geometry_csToList(self, cs):
         return [(c['lon'], c['lat']) for c in cs]
-    def __geometry_extract(self, members, role):
+    def __geometry_extract(self, members):
         extracted = []
         for m in members:
-            if m['role'] == role:
-                if 'geometry' in m:
-                    extracted.append(self.__geometry_csToList(m['geometry']))
-                else:
-                    self._raiseException('Cannot build geometry: relation in relation not supported.')
+            if m.type() == 'relation':
+                self._raiseException('Cannot build geometry: relation in relation not supported.')
+            extracted.append(self.__geometry_csToList(m.__geometry(asList=True)))
         return extracted
     def __geometry_buildRings(self, members):
         rings = []

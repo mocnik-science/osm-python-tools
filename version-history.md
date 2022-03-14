@@ -4,6 +4,10 @@
 
 Please note that versions may include breaking changes.
 
+## Version v0.3.5
+
+* [improvement] missing geometric information is downloaded when needed
+
 ## Version v0.3.4
 
 * [bug] areaId was only computed for the first element of a `NominatimResult`, but not for the first element for which it does not vanish

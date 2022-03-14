@@ -36,7 +36,7 @@ class ApiResult(Element):
     
     def _unshallow(self):
         api = SingletonApi()
-        x = api.query(self.type() + '/' + str(self.id()))
+        x = api.query(self.type() + '/' + str(self.id()) + ('/full' if self.type() != 'node' else ''))
         self.__init__(x._xml, x._queryString, x._params)
     
     def isValid(self):

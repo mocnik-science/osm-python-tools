@@ -133,14 +133,14 @@ class Element(ElementShallow):
             return []
         api = SingletonApi()
         if shallow:
-            return list(map(lambda m: api.query(m['type'] + '/' + str(m['ref']), shallow='''
+            return list(map(lambda m: api.query(m['type'] + '/' + str(m['ref']) + '/full', shallow='''
 <?xml version="1.0" encoding="UTF-8"?>
 <osm>
     <''' + m['type'] + ''' id="''' + str(m['ref']) + '''"/>
 </osm>
             '''), members))
         else:
-            return list(map(lambda m: api.query(m['type'] + '/' + str(m['ref'])), members))
+            return list(map(lambda m: api.query(m['type'] + '/' + str(m['ref']) + '/full'), members))
     def countMembers(self):
         members = self.__members()
         return len(members) if members is not None else None

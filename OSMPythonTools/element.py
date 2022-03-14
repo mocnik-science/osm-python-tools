@@ -165,16 +165,17 @@ class Element(ElementShallow):
                 return [(self.lon(), self.lat())] if asList else geojson.Point((self.lon(), self.lat()))
             elif self.type() == 'way':
                 if self.__getElement('geometry'):
-                    cs = self.__geometry_csToList(self.__getElement('geometry'))
+                    cs = self.__getElement('geometry')
                 else:
                     api = OSMPythonTools.api.Api()
                     d = api.query(self.type() + '/' + str(self.id()) + '/full')
                     dSoup = BeautifulSoup(d._xml, 'xml')
                     nodeIds = [n['ref'] for n in dSoup.find(self.type(), id=str(self.id())).children if n.name == 'nd']
                     cs = [dSoup.osm.find('node', id=nId) for nId in nodeIds]
-                    cs = [(float(c['lon']), float(c['lat'])) for c in cs]
+                    cs = [{'lat': float(c['lat']), 'lon': float(c['lon'])} for c in cs]
                 if asList:
                     return cs
+                cs = self.__geometry_csToList(cs)
                 if self.__geometry_equal(cs[0], cs[-1]):
                     return geojson.Polygon([cs])
                 else:

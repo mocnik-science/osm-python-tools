@@ -9,6 +9,7 @@ with open('./OSMPythonTools/__info__.py', 'w') as f:
     f.write('pkgVersion = \'%s\'\n' % pkgVersion)
     f.write('pkgUrl = \'%s\'\n' % pkgUrl)
 
+# see setup.cfg for metadata
 setuptools.setup(
     name=pkgName,
     packages=setuptools.find_packages(),
@@ -31,13 +32,8 @@ setuptools.setup(
     version=pkgVersion,
     author='Franz-Benjamin Mocnik',
     author_email='mail@mocnik-science.net',
-    description='A library to access OpenStreetMap related services',
     license='GPL-3',
     url=pkgUrl,
     download_url='',
     keywords=['OpenStreetMap', 'OSM', 'service', 'overpass', 'nominatim'],
-    classifiers=[
-        'Development Status :: 4 - Beta',
-        'Programming Language :: Python :: 3',
-    ],
 )

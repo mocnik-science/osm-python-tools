@@ -87,9 +87,9 @@ class Overpass(CacheObject):
                 response = urllib.request.urlopen(urllib.request.Request(self._endpoint + 'status', headers= {'User-Agent': self._userAgent()}))
                 encoding = response.info().get_content_charset('utf-8')
                 statusString = response.read().decode(encoding).split('\n')
-                if statusString[2] == 'Rate limit: 0':
+                if statusString[3] == 'Rate limit: 0':
                     return True
-                if statusString[3].endswith('slots available now.'):
+                if statusString[4].endswith('slots available now.'):
                     if haveWaited:
                         OSMPythonTools.logger.info('[' + self._prefix + '] start processing')
                     return True

@@ -7,6 +7,7 @@ Please note that versions may include breaking changes.
 ## Version v0.3.5
 
 * [improvement] missing geometric information is downloaded when needed
+* [bug] package metadata has been updated to match the standard
 
 ## Version v0.3.4
 

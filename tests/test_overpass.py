@@ -1,3 +1,5 @@
+import random
+
 from OSMPythonTools.nominatim import Nominatim
 from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
 
@@ -108,3 +110,10 @@ def test_differentAreaFormats():
   rs.append(overpass.query(overpassQueryBuilder(area=x.typeId(), elementType='node', selector='"highway"="bus_stop"', out='body')))
   for r in rs:
     assert rs[0].countElements() == r.countElements()
+
+def test_queryWaiting():
+  nominatim = Nominatim()
+  areaId = nominatim.query('Vienna, Austria').areaId()
+  overpass = Overpass()
+  n = 5
+  assert len([overpass.query(overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="' + ''.join(random.choice('abcdefghijklmopqrstuvwxyz') for _ in range(10)) + '"', out='count')) for _ in range(n)]) == n

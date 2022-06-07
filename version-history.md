@@ -10,6 +10,7 @@ Please note that versions may include breaking changes.
 * [bug] package metadata has been updated to match the standard
 * [bug] `Api` test did not run not successfully
 * [bug] adaption to newer versions of the `Overpass` server
+* [improvement] test for the waiting strategy related to the `Overpass` server introduced
 
 ## Version v0.3.4
 

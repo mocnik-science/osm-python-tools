@@ -45,7 +45,7 @@ def test_relation():
   assert x.type() == 'relation'
   assert len(x.members()) > 0
   assert 108402486 in [n.id() for n in x.members()]
-  assert abs(x.members()[0].nodes()[0].lat() - 40.866) < .01
+  assert abs(x.members(shallow=False)[0].nodes()[0].lat() - 40.866) < .01
   assert abs(x.members()[0].nodes()[0].lon() - (-73.795)) < .01
   assert abs(x.members(shallow=False)[1].nodes()[0].lat() - 40.866) < .01
   assert abs(x.members(shallow=False)[1].nodes()[0].lon() - (-73.795)) < .01

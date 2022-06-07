@@ -82,24 +82,42 @@ class Overpass(CacheObject):
     
     def _waitForReady(self):
         try:
-            haveWaited = False
+            state = {
+                'haveWaited': False,
+            }
             while True:
+                # get the status string
                 response = urllib.request.urlopen(urllib.request.Request(self._endpoint + 'status', headers= {'User-Agent': self._userAgent()}))
                 encoding = response.info().get_content_charset('utf-8')
                 statusString = response.read().decode(encoding).split('\n')
-                if statusString[2] == 'Rate limit: 0':
-                    return True
-                if statusString[3].endswith('slots available now.'):
-                    if haveWaited:
-                        OSMPythonTools.logger.info('[' + self._prefix + '] start processing')
-                    return True
-                waitTo = dt.datetime.strptime(statusString[3].split(' ')[3], '%Y-%m-%dT%H:%M:%SZ,')
-                currentTime = dt.datetime.strptime(statusString[1].split(' ')[2], '%Y-%m-%dT%H:%M:%SZ')
-                sec = min((waitTo - currentTime).total_seconds(), 10.)
-                if sec > 0:
-                    OSMPythonTools.logger.info('[' + self._prefix + '] waiting for ' + str(sec) + (' more' if haveWaited else '') + ' seconds')
-                    time.sleep(sec)
-                    haveWaited = True
+                # initialize the waiting time detection
+                state['waitTo'] = None
+                state['currentTime'] = None
+                def wait(state):
+                    if state['waitTo'] is not None and state['currentTime'] is not None:
+                        sec = min((state['waitTo'] - state['currentTime']).total_seconds(), 10.)
+                        if sec > 0:
+                            OSMPythonTools.logger.info('[' + self._prefix + '] waiting for ' + str(sec) + (' more' if state['haveWaited'] else '') + ' seconds')
+                            time.sleep(sec)
+                            state['haveWaited'] = True
+                        return True
+                    return False
+                # iterate through the lines of the status string
+                for line in statusString:
+                    if line == 'Rate limit: 0':
+                        return True
+                    if line.endswith('slots available now.'):
+                        if state['haveWaited']:
+                            OSMPythonTools.logger.info('[' + self._prefix + '] start processing')
+                        return True
+                    if line.startswith('Current time:'):
+                        state['currentTime'] = dt.datetime.strptime(line.split(' ')[-1], '%Y-%m-%dT%H:%M:%SZ')
+                        if wait(state):
+                            break
+                    if line.startswith('Slot available after:'):
+                        state['waitTo'] = dt.datetime.strptime(line.split(': ')[-1].split(',')[0], '%Y-%m-%dT%H:%M:%SZ')
+                        if wait(state):
+                            break
         except:
             raise(Exception('[' + self._prefix + '] could not fetch or interpret status of the endpoint'))
 

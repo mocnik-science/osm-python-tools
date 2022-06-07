@@ -9,6 +9,7 @@ Please note that versions may include breaking changes.
 * [improvement] missing geometric information is downloaded when needed
 * [bug] package metadata has been updated to match the standard
 * [bug] `Api` test did not run not successfully
+* [bug] adaption to newer versions of the `Overpass` server
 
 ## Version v0.3.4
 

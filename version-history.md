@@ -8,6 +8,7 @@ Please note that versions may include breaking changes.
 
 * [improvement] missing geometric information is downloaded when needed
 * [bug] package metadata has been updated to match the standard
+* [bug] `Api` test did not run not successfully
 
 ## Version v0.3.4
 
@@ -22,7 +23,7 @@ Please note that versions may include breaking changes.
 * [improvement; breaking change] timestamps are now returned as objects
 * [bug] metadata did not work for Api queries
 * [minor bug] version was not returned as an integer
-* [minor bug] the method to access the Api version was overwritten by the method to access the element version
+* [minor bug] the method to access the `Api` version was overwritten by the method to access the element version
 
 Breaking changes:
 

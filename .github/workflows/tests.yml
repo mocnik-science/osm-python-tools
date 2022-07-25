@@ -1,0 +1,17 @@
+name: GitHub Actions Demo
+on: [pull_request]
+jobs:
+  Code-Testing:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: cd into osm-python-tools repository to execute tests
+        run: |
+          cd ${{ github.workspace }}
+      - name: Build OSMPythonTools python module
+        run: |
+          python -m pip install ".[test]"
+      - name: Run the tests
+        run: |
+          pytest -vvv --cov=OSMPythonTools tests

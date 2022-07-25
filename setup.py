@@ -27,6 +27,7 @@ setuptools.setup(
         'test': [
             'pytest',
             'pytest-sugar',
+            'pytest-cov',
         ],
     },
     version=pkgVersion,

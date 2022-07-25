@@ -1,7 +1,9 @@
+.idea
+
 MANIFEST
 __pycache__
 /build
-/cache
+cache
 /dist
 /examples/cache
 /OSMPythonTools/__info__.py

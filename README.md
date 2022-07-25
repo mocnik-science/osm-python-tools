@@ -187,8 +187,8 @@ Please note that suppressing the messages means that you have to ensure on your 
 
 You can test the package by installing the corresponding dependencies
 ```bash
-pip install OSMPythonTools [test]
-# or: pip3 install OSMPythonTools [test]
+pip install -e ".[test]"
+# or: pip3 install ".[test]"
 ```
 and then running
 ```bash

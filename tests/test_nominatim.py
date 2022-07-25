@@ -30,6 +30,7 @@ def test_coordinates():
     'city': 'Heidelberg',
     'state': 'Baden-Württemberg',
     'country': 'Deutschland',
+    'ISO3166-2-lvl4': 'DE-BW',
     'country_code': 'de',
   }
   assert len(x.toJSON()) > 0
@@ -57,6 +58,7 @@ def test_coordinatesWkt():
   assert x.areaId() == 3600285864
   assert x.address() == {
     'city': 'Heidelberg',
+    'ISO3166-2-lvl4': 'DE-BW',
     'country': 'Deutschland',
     'country_code': 'de',
     'state': 'Baden-Württemberg',

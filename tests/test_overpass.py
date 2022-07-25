@@ -115,5 +115,5 @@ def test_queryWaiting():
   nominatim = Nominatim()
   areaId = nominatim.query('Vienna, Austria').areaId()
   overpass = Overpass()
-  n = 5
-  assert len([overpass.query(overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="' + ''.join(random.choice('abcdefghijklmopqrstuvwxyz') for _ in range(10)) + '"', out='count')) for _ in range(n)]) == n
+  n = 2 # If n get too large, we might experience a _504 Gateway Timeout_ error
+  assert len([overpass.query(overpassQueryBuilder(area=areaId, elementType='node', selector='"natural"="' + ''.join(random.choice('abcdefghijklmopqrstuvwxyz') for _ in range(10)) + '"', out='count'), timeout=600) for _ in range(n)]) == n

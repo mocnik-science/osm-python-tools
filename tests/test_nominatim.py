@@ -24,11 +24,11 @@ def test_coordinates():
   x = nominatim.query(49.4093582, 8.694724, reverse=True, zoom=10)
   assert x.isReverse() == True
   assert x.displayName() == 'Heidelberg, Baden-Württemberg, Deutschland'
-  print(x.toJSON())
   assert x.areaId() == 3600285864
   assert x.address() == {
     'city': 'Heidelberg',
     'state': 'Baden-Württemberg',
+    'ISO3166-2-lvl4': 'DE-BW',
     'country': 'Deutschland',
     'country_code': 'de',
   }
@@ -53,13 +53,13 @@ def test_coordinatesWkt():
   x = nominatim.query(49.4093582, 8.694724, reverse=True, zoom=10, wkt=True)
   assert x.isReverse() == True
   assert x.displayName() == 'Heidelberg, Baden-Württemberg, Deutschland'
-  print(x.toJSON())
   assert x.areaId() == 3600285864
   assert x.address() == {
     'city': 'Heidelberg',
+    'state': 'Baden-Württemberg',
+    'ISO3166-2-lvl4': 'DE-BW',
     'country': 'Deutschland',
     'country_code': 'de',
-    'state': 'Baden-Württemberg',
   }
   assert len(x.toJSON()) > 0
   assert len(x.wkt()) > 0

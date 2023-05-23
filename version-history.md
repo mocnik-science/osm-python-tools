@@ -4,6 +4,10 @@
 
 Please note that versions may include breaking changes.
 
+## Version v0.4.0
+
+* [improvement; breaking change] make data module's dependencies optional, to reduce the number of required packages
+
 ## Version v0.3.5
 
 * [improvement] missing geometric information is downloaded when needed

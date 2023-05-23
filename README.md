@@ -4,13 +4,20 @@ The python package `OSMPythonTools` provides easy access to [OpenStreetMap (OSM)
 
 ## Installation
 
-To install `OSMPythonTools`, you will need `python3` and `pip` ([How to install pip](https://pip.pypa.io/en/stable/installing/)). Then execute:
+To install `OSMPythonTools`, you will need `python` and `pip` ([How to install pip](https://pip.pypa.io/en/stable/installing/)). Then execute:
 ```bash
 pip install OSMPythonTools
 ```
+
 On some operating systems, `pip` for `python3` is named `pip3`:
 ```bash
 pip3 install OSMPythonTools
+```
+
+To use the built-in data module for easily collecting, mining, and drawing data from OSM, the installation of additional dependencies is required:
+```bash
+pip install OSMPythonTools[all]
+# or: pip3 install OSMPythonTools[all]
 ```
 
 ## Example 1
@@ -187,8 +194,8 @@ Please note that suppressing the messages means that you have to ensure on your 
 
 You can test the package by installing the corresponding dependencies
 ```bash
-pip install OSMPythonTools [test]
-# or: pip3 install OSMPythonTools [test]
+pip install OSMPythonTools[all,test]
+# or: pip3 install OSMPythonTools[all,test]
 ```
 and then running
 ```bash

@@ -1,7 +1,7 @@
 import setuptools
 
 pkgName='OSMPythonTools'
-pkgVersion='0.3.5'
+pkgVersion='0.4.0'
 pkgUrl='https://github.com/mocnik-science/osm-python-tools'
 
 with open('./OSMPythonTools/__info__.py', 'w') as f:
@@ -17,13 +17,16 @@ setuptools.setup(
         'beautifulsoup4',
         'geojson',
         'lxml',
-        'matplotlib',
-        'numpy',
-        'pandas',
+        'python-dateutil',
         'ujson',
-        'xarray',
     ],
     extras_require={
+        'all': [
+            'matplotlib',
+            'numpy',
+            'pandas',
+            'xarray',
+        ],
         'test': [
             'pytest',
             'pytest-sugar',

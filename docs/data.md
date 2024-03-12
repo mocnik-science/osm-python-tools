@@ -2,7 +2,10 @@
 
 # Data Tools
 
-The module contains tools for easily collecting, mining, and drawing data from OSM. It is meant to be used in combination with the other modules.
+The module contains tools for easily collecting, mining, and drawing data from OSM. It is meant to be used in combination with the other modules. To use this module, OSMPythonTools must be installed with all optional dependecies:
+```bash
+pip install OSMPythonTools[all]
+```
 
 ## Querying data
 

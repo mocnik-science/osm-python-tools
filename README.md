@@ -4,13 +4,20 @@ The python package `OSMPythonTools` provides easy access to [OpenStreetMap (OSM)
 
 ## Installation
 
-To install `OSMPythonTools`, you will need `python3` and `pip` ([How to install pip](https://pip.pypa.io/en/stable/installing/)). Then execute:
+To install `OSMPythonTools`, you will need `python` and `pip` ([How to install pip](https://pip.pypa.io/en/stable/installing/)). Then execute:
 ```bash
 pip install OSMPythonTools
 ```
+
 On some operating systems, `pip` for `python3` is named `pip3`:
 ```bash
 pip3 install OSMPythonTools
+```
+
+To use the built-in data module for easily collecting, mining, and drawing data from OSM, the installation of additional dependencies is required:
+```bash
+pip install OSMPythonTools[all]
+# or: pip3 install OSMPythonTools[all]
 ```
 
 ## Example 1
@@ -164,15 +171,15 @@ More examples can be found inside the documentation of the modules.
 
 The following modules are available (please click on their names to access further documentation):
 
-* [OSMPythonTools.**Api**](docs/api.md) - Access to the official OSM API
-* [OSMPythonTools.**Data**](docs/data.md) - Collecting, mining, and drawing data from OSM; to be used in combination with the other modules
-* [OSMPythonTools.**Element**](docs/element.md) - Elements are returned by other services, like the OSM API or the Overpass API
-* [OSMPythonTools.**Nominatim**](docs/nominatim.md) - Access to Nominatim, a reverse geocoder
-* [OSMPythonTools.**Overpass**](docs/overpass.md) - Access to the Overpass API
+* [OSMPythonTools.**Api**](https://github.com/mocnik-science/osm-python-tools/blob/master/docs/api.md) - Access to the official OSM API
+* [OSMPythonTools.**Data**](https://github.com/mocnik-science/osm-python-tools/blob/master/docs/data.md) - Collecting, mining, and drawing data from OSM; to be used in combination with the other modules
+* [OSMPythonTools.**Element**](https://github.com/mocnik-science/osm-python-tools/blob/master/docs/element.md) - Elements are returned by other services, like the OSM API or the Overpass API
+* [OSMPythonTools.**Nominatim**](https://github.com/mocnik-science/osm-python-tools/blob/master/docs/nominatim.md) - Access to Nominatim, a reverse geocoder
+* [OSMPythonTools.**Overpass**](https://github.com/mocnik-science/osm-python-tools/blob/master/docs/overpass.md) - Access to the Overpass API
 
-Please refer to the [general remarks](docs/general-remarks.md) page if you have further questions related to `OSMPythonTools` in general or functionality that the several modules have in common.
+Please refer to the [general remarks](https://github.com/mocnik-science/osm-python-tools/blob/master/docs/general-remarks.md) page if you have further questions related to `OSMPythonTools` in general or functionality that the several modules have in common.
 
-**Observe the [breaking changes as included in the version history](version-history.md).**
+**Observe the [breaking changes as included in the version history](https://github.com/mocnik-science/osm-python-tools/blob/master/version-history.md).**
 
 ## Logging
 
@@ -187,8 +194,8 @@ Please note that suppressing the messages means that you have to ensure on your 
 
 You can test the package by installing the corresponding dependencies
 ```bash
-pip install OSMPythonTools [test]
-# or: pip3 install OSMPythonTools [test]
+pip install OSMPythonTools[all,test]
+# or: pip3 install OSMPythonTools[all,test]
 ```
 and then running
 ```bash

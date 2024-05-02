@@ -148,28 +148,28 @@ Instead of computing table representations, the data can also be plotted by usin
 data.plot(city='manhattan', typeOfRoad=ALL)
 ```
 
-![data.plot(city='manhattan', typeOfRoad=ALL)](https://github.com/mocnik-science/osm-python-tools/blob/master/examples/plot-manhattan.png)
+![data.plot(city='manhattan', typeOfRoad=ALL)](https://github.com/mocnik-science/osm-python-tools/blob/main/examples/plot-manhattan.png)
 
 Also the primary roads from different cities can be compared:
 ```python
 data.plot(city=ALL, typeOfRoad='primary')
 ```
 
-![data.plot(city=ALL, typeOfRoad='primary')](https://github.com/mocnik-science/osm-python-tools/blob/master/examples/plot-primary.png)
+![data.plot(city=ALL, typeOfRoad='primary')](https://github.com/mocnik-science/osm-python-tools/blob/main/examples/plot-primary.png)
 
 The rows correspond to the x axis, and the columns to the y axis. It is thus important to restrict the number of row dimensions until only one row dimension is left. The rows should only contain numerical values, when being plotted. If the values are not numerical, a bar plot can be used:
 ```python
 data.plotBar(city='manhattan', year=ALL)
 ```
 
-![data.plotBar(city='manhattan', year=ALL)](https://github.com/mocnik-science/osm-python-tools/blob/master/examples/plotbar-manhattan.png)
+![data.plotBar(city='manhattan', year=ALL)](https://github.com/mocnik-science/osm-python-tools/blob/main/examples/plotbar-manhattan.png)
 
 When two values shall be compared, a scatter plot can be used. The following plot compares the number of primary roads in Vienna (x axis) to the number of primary roads in Manhattan (y axis):
 ```python
 data.plotScatter('vienna', 'manhattan', city=['vienna', 'manhattan'], typeOfRoad='primary')
 ```
 
-![data.plotScatter('vienna', 'manhattan', city=['vienna', 'manhattan'], typeOfRoad='primary')](https://github.com/mocnik-science/osm-python-tools/blob/master/examples/plotscatter-primary.png)
+![data.plotScatter('vienna', 'manhattan', city=['vienna', 'manhattan'], typeOfRoad='primary')](https://github.com/mocnik-science/osm-python-tools/blob/main/examples/plotscatter-primary.png)
 
 When the plots (`plot`, `plotBar`, and `plotScatter`) are generated, they are (on most systems) shown in a graphical user interface. If the parameter `filename` is added, the data is instead saved to the corresponding file:
 ```python

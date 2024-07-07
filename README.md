@@ -145,7 +145,7 @@ We can now easily generate a plot from the result:
 data.plot(city=ALL, filename='example4.png')
 ```
 
-![data.plot(city=ALL, filename='example4.png')](https://github.com/mocnik-science/osm-python-tools/blob/master/examples/example4.png)
+![data.plot(city=ALL, filename='example4.png')](./examples/example4.png)
 
 Alternatively, we can generate a table from the result
 ```python

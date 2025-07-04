@@ -105,3 +105,22 @@ nominatim = Nominatim(waitBetweenQueries=2)
 Also the parameters `endpoint` and `waitBetweenQueries` can be used.
 
 Further information about these parameters can be found on the [general remarks](general-remarks.md) page.
+
+## Individual results
+
+Geocoding can lead to ambiguous results, in case of which Nominatim provides a list of results.  When you use Nominatim like before to query for the `address`, `displayName`, or `areaId`, the first result that has this attribute is considered.
+
+If you want to have more fine-grained access to the list of results, you can iterate through them:
+```python
+from OSMPythonTools.nominatim import Nominatim
+nominatim = Nominatim()
+for location in nominatim.query('Heidelberg'):
+  print(location.displayName())
+```
+In this way, the `displayName` or other attributes of the individual results can be accessed.
+
+In case only the first result shall be considered, you can use the method `firstResult`:
+```python
+heidelberg = nominatim.query('Heidelberg')
+print(heidelberg.firstResult().displayName())
+```

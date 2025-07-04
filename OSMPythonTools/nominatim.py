@@ -41,9 +41,9 @@ class Nominatim(CacheObject):
         return endpoint + queryString + '?' + urllib.parse.urlencode(params)
 
     def _rawToResult(self, data, queryString, params, kwargs, cacheMetadata=None, shallow=False):
-        return NominatimResult(data, queryString, params, cacheMetadata=cacheMetadata)
+        return NominatimResults(data, queryString, params, cacheMetadata=cacheMetadata)
 
-class NominatimResult(ElementShallow):
+class NominatimResults(ElementShallow):
     def __init__(self, json, queryString, params, cacheMetadata=None):
         self._json = [json] if queryString == 'reverse' else json
         self._queryString = queryString
@@ -53,6 +53,12 @@ class NominatimResult(ElementShallow):
     def toJSON(self):
         return self._json
 
+    def __iter__(self):
+        return iter(NominatimResult(json, self._queryString, self._params, self._cacheMetadata) for json in self._json)
+
+    def firstResult(self):
+        return next(self.__iter__(), None)
+
     def queryString(self):
         return [self._params['lat'], self._params['lon']] if self.isReverse() else self._params['q']
 
@@ -60,39 +66,44 @@ class NominatimResult(ElementShallow):
         return self._queryString == 'reverse'
 
     def displayName(self):
-        for d in self._json:
-            if 'display_name' in d:
-                return d['display_name']
-        return None
+      return next((s.displayName() for s in self if s.displayName()), None)
 
     def address(self):
-        for d in self._json:
-            if 'address' in d:
-                return d['address']
-        return None
+      return next((s.address() for s in self if s.address()), None)
 
     def id(self):
-        for d in self._json:
-            if 'osm_type' in d and 'osm_id' in d:
-                return d['osm_id']
-        return None
+        return next((s.id() for s in self if s.id()), None)
 
     def type(self):
-        for d in self._json:
-            if 'osm_type' in d and 'osm_id' in d:
-                return d['osm_type']
-        return None
+        return next((s.type() for s in self if s.type()), None)
 
     def wkt(self):
-        for d in self._json:
-            if 'geotext' in d:
-                return d['geotext']
-        return None
+        return next((s.wkt() for s in self if s.wkt()), None)
 
     def areaId(self):
-        for d in self._json:
-            if 'osm_type' in d and 'osm_id' in d:
-                areaId = self._areaId(d['osm_type'], d['osm_id'])
-                if areaId is not None:
-                    return areaId
-        return None
+        return next((s.areaId() for s in self if s.areaId()), None)
+
+class NominatimResult(NominatimResults):
+  def __init__(self, json, queryString, params, cacheMetadata=None):
+      super().__init__(json, queryString, params, cacheMetadata)
+
+  def isReverse(self):
+      return self._queryString == 'reverse'
+
+  def displayName(self):
+      return self._json['display_name'] if 'display_name' in self._json else None
+
+  def address(self):
+      return self._json['address'] if 'address' in self._json else None
+
+  def id(self):
+      return self._json['osm_id'] if 'osm_type' in self._json and 'osm_id' in self._json else None
+
+  def type(self):
+      return self._json['osm_type'] if 'osm_type' in self._json and 'osm_id' in self._json else None
+
+  def wkt(self):
+      return self._json['geotext'] if 'geotext' in self._json else None
+
+  def areaId(self):
+      return self._areaId(self._json['osm_type'], self._json['osm_id']) if 'osm_type' in self._json and 'osm_id' in self._json else None

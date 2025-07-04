@@ -41,11 +41,11 @@ class Nominatim(CacheObject):
         return endpoint + queryString + '?' + urllib.parse.urlencode(params)
 
     def _rawToResult(self, data, queryString, params, kwargs, cacheMetadata=None, shallow=False):
-        return NominatimResults(data, queryString, params, cacheMetadata=cacheMetadata)
+        return NominatimResult(data, queryString, params, cacheMetadata=cacheMetadata) if queryString == 'reverse' else NominatimResults(data, queryString, params, cacheMetadata=cacheMetadata)
 
 class NominatimResults(ElementShallow):
     def __init__(self, json, queryString, params, cacheMetadata=None):
-        self._json = [json] if queryString == 'reverse' else json
+        self._json = json
         self._queryString = queryString
         self._params = params
         super().__init__(cacheMetadata)
@@ -54,10 +54,10 @@ class NominatimResults(ElementShallow):
         return self._json
 
     def __iter__(self):
-        return iter(NominatimResult(json, self._queryString, self._params, self._cacheMetadata) for json in self._json)
+        return (NominatimResult(json, self._queryString, self._params, self._cacheMetadata) for json in self._json)
 
     def firstResult(self):
-        return next(self.__iter__(), None)
+        return next(iter(self), None)
 
     def queryString(self):
         return [self._params['lat'], self._params['lon']] if self.isReverse() else self._params['q']

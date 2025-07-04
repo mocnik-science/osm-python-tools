@@ -108,7 +108,7 @@ Further information about these parameters can be found on the [general remarks]
 
 ## Individual results
 
-Geocoding can lead to ambiguous results, in case of which Nominatim provides a list of results.  When you use Nominatim like before to query for the `address`, `displayName`, or `areaId`, the first result that has this attribute is considered.
+Forward geocoding can lead to ambiguous results, in case of which Nominatim provides a list of results.  When you use Nominatim like before to query for the `address`, `displayName`, or `areaId`, the first result that has this attribute is considered.
 
 If you want to have more fine-grained access to the list of results, you can iterate through them:
 ```python

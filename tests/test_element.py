@@ -29,7 +29,7 @@ def test_elementCreate(type, id):
   ns.append(Element.fromId(type[0] + str(id)))
   # objects
   ns.append(Element.fromId(ns[0]))
-  ns.append(Element.fromId(NominatimResult([{'osm_type': type.lower(), 'osm_id': id}], '', None)))
+  ns.append(Element.fromId(NominatimResult({'osm_type': type.lower(), 'osm_id': id}, '', None)))
   for n in ns:
     assert ns[0].type() == n.type()
     assert ns[0].id() == n.id()

@@ -4,6 +4,11 @@
 
 Please note that versions may include breaking changes.
 
+## Version v0.3.6
+
+* [improvement] `Nominatim` forward geocoding results can be iterated
+
+
 ## Version v0.3.5
 
 * [improvement] missing geometric information is downloaded when needed

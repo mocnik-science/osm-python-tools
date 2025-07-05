@@ -10,11 +10,11 @@ from OSMPythonTools.element import Element
 from OSMPythonTools.internal.cacheObject import CacheObject
 from OSMPythonTools.internal.response import Response
 
-def overpassQueryBuilder(area=None, bbox=None, polygon= None, elementType=None, selector=[], conditions=[], since=None, to=None, userid=None, user=None, includeGeometry=False, includeCenter=False, out='body'):
+def overpassQueryBuilder(area=None, bbox=None, polygon=None, elementType=None, selector=[], conditions=[], since=None, to=None, userid=None, user=None, includeGeometry=False, includeCenter=False, out='body'):
     if not elementType:
         OSMPythonTools._raiseException('overpassQueryBuilder', 'Please provide an elementType')
     if not area and not bbox and not polygon:
-        OSMPythonTools._raiseException('overpassQueryBuilder', 'Please provide an area or a bounding box or a polygon')
+        OSMPythonTools._raiseException('overpassQueryBuilder', 'Please provide an area, a bounding box, or a polygon')
     if area and bbox:
         OSMPythonTools._raiseException('overpassQueryBuilder', 'Please do not provide an area and a bounding box')
     if area and polygon:
@@ -45,7 +45,7 @@ def overpassQueryBuilder(area=None, bbox=None, polygon= None, elementType=None, 
     userRestriction2 = '(user:' + ','.join(map(lambda u: '"' + u + '"', user)) + ')' if user else ''
     searchArea = '(' + 'area.searchArea' + ')' if areaId else ''
     searchBbox = '(' + ','.join(map(str, bbox)) + ')' if bbox else ''
-    searchPolygon = f'(poly:"{polygon}")' if polygon else ''
+    searchPolygon = '(poly:"' + ' '.join([f'{lat} {lon}' for [lat, lon] in polygon]) + '")' if polygon else ''
     conditions = '(if: ' + ' && '.join(map(str, conditions)) + ')' if conditions else ''
     query = ('area(' + str(areaId) + ')->.searchArea;(') if areaId else '('
     for e in elementType:

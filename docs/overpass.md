@@ -26,6 +26,10 @@ Instead of an area, one can also use a bounding box:
 ```python
 query = overpassQueryBuilder(bbox=[48.1, 16.3, 48.3, 16.5], elementType='node', selector='"highway"="bus_stop"', out='body')
 ```
+or a polygon:
+```python
+query = overpassQueryBuilder(polygon=[[48.3, 16.3], [48.3, 16.5], [48.2, 16.6], [48.1, 16.5], [48.1, 16.3]], elementType='node', selector='"highway"="bus_stop"', out='body')
+```
 The variable `query` is just a string containing the query:
 ```
 'area(3600175905)->.searchArea;(node["highway"="bus_stop"](area.searchArea);); out body;'

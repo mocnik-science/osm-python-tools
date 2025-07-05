@@ -7,7 +7,7 @@ Please note that versions may include breaking changes.
 ## Version v0.3.6
 
 * [improvement] `Nominatim` forward geocoding results can be iterated
-
+* [improvement] polygons can be used to define the search area for an `Overpass` query
 
 ## Version v0.3.5
 
